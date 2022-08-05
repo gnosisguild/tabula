@@ -116,6 +116,25 @@ export const switchChain = async (connector: AbstractConnector, chainId: number)
     })
 }
 
+export const transactionUrl = async (chainId: SupportedChainId) => {
+  switch (chainId) {
+    case SupportedChainId.MAINNET:
+      return "https://etherscan.io/tx/"
+    case SupportedChainId.RINKEBY:
+      return "https://rinkeby.etherscan.io/tx/"
+    case SupportedChainId.GNOSIS_CHAIN:
+      return "https://blockscout.com/xdai/mainnet/tx/"
+    case SupportedChainId.GOERLI:
+      return "https://goerli.etherscan.io/tx/"
+    case SupportedChainId.POLYGON:
+      return "https://polygonscan.com/tx/"
+    case SupportedChainId.ARBITRUM:
+      return "https://arbiscan.io/tx/"
+    case SupportedChainId.OPTIMISM:
+      return "https://optimistic.etherscan.io/tx/"
+  }
+}
+
 const chainParameters = (chainId: number) => {
   const requiredChainIdHex = `0x${chainId.toString(16)}`
   switch (chainId) {

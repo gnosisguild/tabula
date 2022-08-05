@@ -2,6 +2,7 @@ import { TransactionReceipt } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
 import { useState } from "react"
 import { useParams } from "react-router-dom"
+import { transactionUrl } from "../../../constants/chain"
 import { useFiles } from "../../../hooks/useFiles"
 import { useNotification } from "../../../hooks/useNotification"
 import { useWallet } from "../../../hooks/useWallet"
@@ -19,7 +20,6 @@ import {
 
 const PUBLICATION_TAG = "PUBLICATION" // PUBLICATION
 const POSTER_CONTRACT = process.env.REACT_APP_POSTER_CONTRACT
-const URL = "https://rinkeby.etherscan.io/tx/"
 
 const usePoster = () => {
   const { network } = useParams<{ network: string }>()
@@ -77,7 +77,7 @@ const usePoster = () => {
           const receipt: TransactionReceipt = await tx.wait()
           content.image && (await pinAction(content.image, `${content.title}-image`))
 
-          setTransactionUrl(URL + receipt.transactionHash)
+          setTransactionUrl(transactionUrl(chainId) + receipt.transactionHash)
           setLoading(false)
         } catch (error: any) {
           setLoading(false)
@@ -99,7 +99,7 @@ const usePoster = () => {
         try {
           const tx = await poster.post(JSON.stringify(publication), PUBLICATION_TAG)
           const receipt: TransactionReceipt = await tx.wait()
-          setTransactionUrl(URL + receipt.transactionHash)
+          setTransactionUrl(transactionUrl(chainId) + receipt.transactionHash)
 
           setLoading(false)
         } catch (error: any) {
@@ -143,7 +143,7 @@ const usePoster = () => {
           setLoading(false)
           content.image && (await pinAction(content.image, `${content.title}-image`, "Successfully image pinned"))
           pin && (await pinAction(content.article, `Article-${content.title}`, "Successfully article pinned"))
-          setTransactionUrl(URL + receipt.transactionHash)
+          setTransactionUrl(transactionUrl(chainId) + receipt.transactionHash)
         } catch (error: any) {
           setLoading(false)
           showTransactionError()
@@ -195,7 +195,7 @@ const usePoster = () => {
               `Article-${content.title}-${content.lastUpdated}`,
               "Successfully pinned article",
             ))
-          setTransactionUrl(URL + receipt.transactionHash)
+          setTransactionUrl(transactionUrl(chainId) + receipt.transactionHash)
         } catch (error: any) {
           setLoading(false)
           showTransactionError()
@@ -217,7 +217,7 @@ const usePoster = () => {
           const tx = await poster.post(JSON.stringify(content), PUBLICATION_TAG)
           const receipt: TransactionReceipt = await tx.wait()
           setLoading(false)
-          setTransactionUrl(URL + receipt.transactionHash)
+          setTransactionUrl(transactionUrl(chainId) + receipt.transactionHash)
         } catch (error: any) {
           setLoading(false)
           showTransactionError()
@@ -239,7 +239,7 @@ const usePoster = () => {
           const tx = await poster.post(JSON.stringify(fields), PUBLICATION_TAG)
           const receipt: TransactionReceipt = await tx.wait()
           setLoading(false)
-          setTransactionUrl(URL + receipt.transactionHash)
+          setTransactionUrl(transactionUrl(chainId) + receipt.transactionHash)
         } catch (error: any) {
           setLoading(false)
           showTransactionError()
