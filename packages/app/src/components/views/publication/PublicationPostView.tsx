@@ -8,6 +8,7 @@ import usePublication from "../../../services/publications/hooks/usePublication"
 import { palette, typography } from "../../../theme"
 import { haveActionPermission, isOwner } from "../../../utils/permission"
 import PublicationAvatar from "../../commons/PublicationAvatar"
+import DeterministicAvatar from "../../commons/DeterministicAvatar"
 import { ViewContainer } from "../../commons/ViewContainer"
 import PublicationPage from "../../layout/PublicationPage"
 import { PermissionSection } from "./components/PermissionSection"
@@ -78,12 +79,15 @@ export const PublicationPostView: React.FC<PublicationPostViewProps> = ({ update
               <PublicationPostContainer container gap={3} alignItems={"center"}>
                 <Grid item>
                   {!editingPublication && (
-                    <Avatar
-                      sx={{ width: 160, height: 160 }}
-                      src={publication.image ? `${IPFS_GATEWAY}/${publication.image}` : ""}
-                    >
-                      {" "}
-                    </Avatar>
+                    <DeterministicAvatar publicationId={publicationId} width={160} height={160} />
+                    // <Avatar
+                    //   sx={{ width: 160, height: 160 }}
+                    //   src={
+                    //     publication.image ? `${IPFS_GATEWAY}/${publication.image}` : "" // default Image goes here
+                    //   }
+                    // >
+                    //   {" "}
+                    // </Avatar>
                   )}
                   {editingPublication && (
                     <PublicationAvatar defaultImage={publication.image} onFileSelected={saveDraftPublicationImage} />
