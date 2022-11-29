@@ -21,10 +21,14 @@ const DeterministicAvatar: React.FC<DeterministicAvatarProps> = ({ publicationId
   const strokeColor = [43, 2, 20]
   const divisions = 20
 
-  const publicationHash = publicationId?.replace("P-", "").replace(/(\d)-(\d*)/, "$1")
-  const publicationtokenId = publicationId?.match(/(\d)-(\d*)/)
-  let tokenData = { hash: publicationHash, tokenId: publicationtokenId && publicationtokenId[2] }
-  // const tokenData = genTokenData(123)
+  let tokenData
+  if (publicationId) {
+    const publicationHash = publicationId?.replace("P-", "").replace(/(\d)-(\d*)/, "$1")
+    const publicationtokenId = publicationId?.match(/(\d)-(\d*)/)
+    tokenData = { hash: publicationHash, tokenId: publicationtokenId && publicationtokenId[2] }
+  } else {
+    tokenData = genTokenData(123)
+  }
   const R = new Random(tokenData)
 
   for (let i = 0; i < divisions; i++) {
@@ -90,11 +94,8 @@ const DeterministicAvatar: React.FC<DeterministicAvatarProps> = ({ publicationId
 
       p5.strokeWeight(this.strokeWeight)
       if (this.bool_seeds[1]) {
-        // p5.line(x1, y1, x2, y2)
         drawBrushLine(x1, y1, x2, y2, 100, this.strokeWeight, 30, p5)
       }
-      // p5.line(x1 - x1 * starPointOffsetRatio, y1 - y1 * starPointOffsetRatio, x2 - x2 * 0.65, y2 - y2 * 0.65)
-      // p5.line(x2 - x2 * starPointOffsetRatio, y2 - y2 * starPointOffsetRatio, x1 - x1 * 0.65, y1 - y1 * 0.65)
       drawBrushLine(
         x1 - x1 * starPointOffsetRatio,
         y1 - y1 * starPointOffsetRatio,

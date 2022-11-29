@@ -18,6 +18,7 @@ import SetupIpfsView from "./components/views/pinning/SetupIpfsView"
 import { useWeb3React } from "@web3-react/core"
 import { PosterProvider } from "./services/poster/context"
 import { WalletProvider } from "./connectors/WalletProvider"
+import DeterministicAvatar from "./components/commons/DeterministicAvatar"
 
 const App: React.FC = () => {
   // the chainId should be from the publication if its present
@@ -31,6 +32,11 @@ const App: React.FC = () => {
       setChainId(newChainId)
     }
   }
+
+  let vMin
+  useEffect(() => {
+    vMin = window.innerHeight < window.innerWidth ? window.innerHeight : window.innerWidth
+  }, [])
 
   useEffect(() => {
     setCurrentSubgraphClient(subgraphClient(chainId))
@@ -51,6 +57,7 @@ const App: React.FC = () => {
                 <Route path="/" element={<LandingView />} />
                 <Route path="/wallet" element={<WalletView />} />
                 <Route path="/:network">
+                  <Route path="generative" element={<DeterministicAvatar width={vMin} height={vMin} />} />
                   <Route path="pinning" element={<SetupIpfsView />} />
                   <Route path="publications" element={<PublishView updateChainId={updateChainId} />} />
 
