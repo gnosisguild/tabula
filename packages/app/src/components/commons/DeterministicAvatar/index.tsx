@@ -38,7 +38,7 @@ const DeterministicAvatar: React.FC<DeterministicAvatarProps> = ({ publicationId
 
   const accentHue = R.random_num(0, 140)
   const bgColor = [accentHue, R.random_num(10, 30), R.random_num(90, 100)]
-  const strokeColor = [accentHue, R.random_num(20, 40), R.random_num(35, 45)]
+  const strokeColor = [accentHue, R.random_num(20, 40), R.random_num(30, 40)]
   const outerStrokeColor = [accentHue, R.random_num(50, 80), R.random_num(50, 60)]
 
   const strokeWeight = 0.012 * width
@@ -56,7 +56,6 @@ const DeterministicAvatar: React.FC<DeterministicAvatarProps> = ({ publicationId
     theta: number,
     radius: number,
     rotation: number,
-    // showCircles: boolean,
     fill: any,
     strokeWeight: number,
     strokeColor: any,
@@ -72,13 +71,13 @@ const DeterministicAvatar: React.FC<DeterministicAvatarProps> = ({ publicationId
     this.outerRadius = radius
     this.rotation = rotation
     this.initialRotation = rotation
-    // this.showCircles = showCircles
     this.fill = fill
     this.strokeWeight = strokeWeight
     this.strokeColor = strokeColor
     this.bool_seeds = bool_seeds
 
     this.render = function () {
+      p5.stroke(this.strokeColor)
       p5.push()
       p5.translate(width / 2, height / 2)
       let x1, x2, y1, y2
@@ -91,19 +90,12 @@ const DeterministicAvatar: React.FC<DeterministicAvatarProps> = ({ publicationId
         y2 = this.outerRadius * p5.sin(t + 45 / 2)
         let x3 = this.innerRadius * p5.cos(t + this.theta / 2 + 45 / 2)
         let y3 = this.innerRadius * p5.sin(t + this.theta / 2 + 45 / 2)
-        p5.noStroke()
         p5.fill(this.fill)
         p5.beginShape()
         p5.vertex(x1, y1)
         p5.vertex(x2, y2)
         p5.vertex(x3, y3)
         p5.endShape(p5.CLOSE)
-
-        p5.fill(this.strokeColor)
-        p5.strokeWeight(this.strokeWeight)
-        drawBrushLine(x1, y1, x2, y2, 200, this.strokeWeight, 15.3, p5)
-        drawBrushLine(x2, y2, x3, y3, 200, this.strokeWeight, 15.3, p5)
-        drawBrushLine(x3, y3, x1, y1, 200, this.strokeWeight, 15.3, p5)
       } else {
         x1 = this.radius
         y1 = 0
@@ -111,39 +103,15 @@ const DeterministicAvatar: React.FC<DeterministicAvatarProps> = ({ publicationId
         y2 = this.radius * p5.sin(this.theta)
 
         const starPointOffsetRatio = this.bool_seeds[0] ? 0 : 0.1
-
-        p5.noStroke()
         p5.fill(this.fill)
         p5.beginShape()
         p5.vertex(x1, y1)
         p5.vertex(0, 0)
         p5.vertex(x2, y2)
         p5.endShape(p5.CLOSE)
-
-        p5.fill(this.strokeColor)
-
-        p5.strokeWeight(this.strokeWeight)
-        drawBrushLine(x1, y1, x2, y2, 200, this.strokeWeight, 15.3, p5)
-        drawBrushLine(
-          x1 - x1 * starPointOffsetRatio,
-          y1 - y1 * starPointOffsetRatio,
-          x2 - x2 * 0.65,
-          y2 - y2 * 0.65,
-          200,
-          this.strokeWeight,
-          15.3,
-          p5,
-        )
-        drawBrushLine(
-          x2 - x2 * starPointOffsetRatio,
-          y2 - y2 * starPointOffsetRatio,
-          x1 - x1 * 0.65,
-          y1 - y1 * 0.65,
-          200,
-          this.strokeWeight,
-          15.3,
-          p5,
-        )
+        p5.line(x1, y1, x2, y2)
+        p5.line(x1 - x1 * starPointOffsetRatio, y1 - y1 * starPointOffsetRatio, x2 - x2 * 0.65, y2 - y2 * 0.65)
+        p5.line(x2 - x2 * starPointOffsetRatio, y2 - y2 * starPointOffsetRatio, x1 - x1 * 0.65, y1 - y1 * 0.65)
       }
       p5.pop()
     }
@@ -151,13 +119,14 @@ const DeterministicAvatar: React.FC<DeterministicAvatarProps> = ({ publicationId
 
   const setup = (p5: p5Types, canvasParentRef: Element) => {
     p5.createCanvas(width, height).parent(canvasParentRef)
-    p5.colorMode(p5.HSB)
+    p5.colorMode(p5.HSB, 360, 100, 100, 1)
     p5.pixelDensity(2)
     p5.angleMode(p5.DEGREES)
     p5.imageMode(p5.CENTER)
     p5.ellipseMode(p5.CENTER)
     markingsLayers = p5.round(R.random_num(4, 7))
     p5.strokeJoin(p5.ROUND)
+    p5.strokeWeight(strokeWeight)
     initializeMarkings(p5)
     initializeNoiseLayer(p5)
   }
@@ -165,13 +134,8 @@ const DeterministicAvatar: React.FC<DeterministicAvatarProps> = ({ publicationId
   const draw = (p5: p5Types) => {
     p5.background(bgColor)
     renderMarkings(p5)
-    // drawBrushArc(0,0, width*0.4, 5, 300)
     renderNoise(p5)
-    p5.noFill()
-    p5.stroke(outerStrokeColor)
-    p5.strokeWeight(8)
-    p5.ellipse(0, 0, width, height)
-    p5.noLoop()
+    addBorder(p5)
   }
 
   const initializeMarkings = (p5: p5Types) => {
@@ -193,7 +157,6 @@ const DeterministicAvatar: React.FC<DeterministicAvatarProps> = ({ publicationId
             theta, // theta,
             radius, // radius,
             theta * p + rotOffset, // rotation,
-            // layerWithCircles.some((layer: number) => layer === i), // showCircle
             fillValue, // fill
             strokeWeight, // strokeWeight
             strokeColor, // strokeColor
@@ -261,64 +224,12 @@ const DeterministicAvatar: React.FC<DeterministicAvatarProps> = ({ publicationId
     p5.blendMode(p5.BLEND)
   }
 
-  const drawBrushLine = (
-    x1: number,
-    y1: number,
-    x2: number,
-    y2: number,
-    inc: number,
-    size: number,
-    variance: number,
-    p5: p5Types,
-  ) => {
-    p5.stroke(strokeColor)
-    p5.line(x1, y1, x2, y2)
-    // const stepsBetweenPoints = p5.lerp(inc, inc * 1.5, p5.map(x2 - x1, width * 0.2, width * 0.6, 1, 0))
-    // const xIncrement = (x2 - x1) / stepsBetweenPoints
-    // const yIncrement = (y2 - y1) / stepsBetweenPoints
-
-    // let currentX = x1
-    // let currentY = y1
-
-    // for (let i = 0; i < stepsBetweenPoints; i++) {
-    //   randomCirclesAroundPoints(currentX, currentY, size, R.random_num(size * variance, size * 2), p5)
-    //   currentX += xIncrement
-    //   currentY += yIncrement
-    // }
-  }
-
-  const randomCirclesAroundPoints = (
-    centerX: number,
-    centerY: number,
-    thickness: number,
-    density: number,
-    p5: p5Types,
-  ) => {
-    for (let i = 0; i < density; i++) {
-      const rndRadius = R.random_num(0, thickness)
-      const rndDegrees = R.random_num(0, 360)
-      const x = centerX + rndRadius * p5.cos(rndDegrees)
-      const y = centerY + rndRadius * p5.sin(rndDegrees)
-      const pointRadius = R.random_num(thickness * 0.05, thickness * 0.2)
-      p5.circle(x, y, pointRadius)
-    }
-  }
-
-  const drawBrushArc = (
-    cx: number,
-    cy: number,
-    d: number,
-    stroke: number,
-    density: number,
-    p5: p5Types,
-    start: number = 0,
-    stop: number = 360,
-  ) => {
-    for (let i = start; i < stop; i++) {
-      let currentX = (p5.sin(i) * d) / 2
-      let currentY = (p5.cos(i) * d) / 2
-      randomCirclesAroundPoints(currentX + cx, currentY + cy, stroke, density, p5)
-    }
+  const addBorder = (p5: p5Types) => {
+    p5.noFill()
+    p5.stroke(outerStrokeColor)
+    p5.strokeWeight(strokeWeight * 2) // half of the border gets cropped.
+    p5.ellipse(0, 0, width, height)
+    p5.noLoop()
   }
 
   return (
