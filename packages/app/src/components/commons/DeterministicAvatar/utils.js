@@ -49,6 +49,20 @@ class Random {
   random_choice(list) {
     return list[this.random_int(0, list.length - 1)];
   }
+
+  shuffleArray = (arr) => {
+    var rand;
+    var tmp;
+    var len = arr.length;
+    var ret = [...arr];
+    while (len) {
+      rand = ~~(this.random_dec() * len--);
+      tmp = ret[len];
+      ret[len] = ret[rand];
+      ret[rand] = tmp;
+    }
+    return ret;
+  };
 }
 
 export const genTokenData = (projectNum) => {
