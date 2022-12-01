@@ -36,7 +36,7 @@ const DeterministicAvatar: React.FC<DeterministicAvatarProps> = ({ publicationId
     palette.push(newFill) // color
   }
 
-  const accentHue = R.random_num(0, 140)
+  const accentHue = R.random_num(0, 360)
   const bgColor = [accentHue, R.random_num(10, 30), R.random_num(90, 100)]
   const strokeColor = [accentHue, R.random_num(20, 40), R.random_num(30, 40)]
   const outerStrokeColor = [accentHue, R.random_num(50, 80), R.random_num(50, 60)]
