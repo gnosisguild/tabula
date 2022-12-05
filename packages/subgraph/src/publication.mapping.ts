@@ -6,6 +6,7 @@ import {
   ACTION__PUBLICATION,
   getPermissionId,
   getPublicationId,
+  getPublicationHash,
   jsonToArrayString,
   jsonToString,
   SUB_ACTION__CREATE,
@@ -19,6 +20,8 @@ import { ARTICLE_ENTITY_TYPE, PERMISSION_ENTITY_TYPE, PUBLICATION_ENTITY_TYPE } 
 export function handlePublicationAction(subAction: String, content: TypedMap<string, JSONValue>, event: NewPost): void {
   if (subAction == SUB_ACTION__CREATE) {
     const publicationId = getPublicationId(event)
+    const publicationHashArray = getPublicationHash(publicationId)
+    const publicationHash = String.fromCharCode(publicationHashArray)
 
     const permissionId = getPermissionId(publicationId, event.params.user)
     const permission = new Permission(permissionId)
@@ -33,6 +36,7 @@ export function handlePublicationAction(subAction: String, content: TypedMap<str
     permission.save()
 
     const publication = new Publication(publicationId)
+    publication.hash = publicationHash
     publication.title = jsonToString(content.get("title"))
     publication.description = jsonToString(content.get("description"))
     publication.image = jsonToString(content.get("image"))

@@ -1,7 +1,7 @@
-import { Address } from "@graphprotocol/graph-ts"
+import { Address, crypto } from "@graphprotocol/graph-ts"
 import { assert, clearStore, test } from "matchstick-as/assembly/index"
 import { handleNewPost } from "../src/mapping"
-import { getPermissionId, getPublicationId } from "../src/utils"
+import { getPermissionId, getPublicationHash, getPublicationId } from "../src/utils"
 import { createNewPostEvent, PUBLICATION_ENTITY_TYPE, PUBLICATION_TAG, PERMISSION_ENTITY_TYPE } from "./util"
 
 test("An account can can create a publication", () => {
@@ -41,6 +41,10 @@ test("An account can update a publication where the account has `publication/upd
   const newPublicationPostEvent = createNewPostEvent(user, publicationContent, PUBLICATION_TAG)
   const publicationId = getPublicationId(newPublicationPostEvent)
   handleNewPost(newPublicationPostEvent)
+  // @ts-ignore
+  let enc = new TextEncoder('utf-8');
+  const hashByteArray = crypto.keccak256(enc.encode(publicationId))
+  console.log(String.fromCharCode(hashByteArray))
 
   assert.fieldEquals(PUBLICATION_ENTITY_TYPE, publicationId, "title", publicationTitle)
   assert.fieldEquals(PUBLICATION_ENTITY_TYPE, publicationId, "id", publicationId)
