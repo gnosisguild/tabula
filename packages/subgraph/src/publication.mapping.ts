@@ -20,9 +20,7 @@ import { ARTICLE_ENTITY_TYPE, PERMISSION_ENTITY_TYPE, PUBLICATION_ENTITY_TYPE } 
 export function handlePublicationAction(subAction: String, content: TypedMap<string, JSONValue>, event: NewPost): void {
   if (subAction == SUB_ACTION__CREATE) {
     const publicationId = getPublicationId(event)
-    const publicationHashArray = getPublicationHash(publicationId)
-    const publicationHash = String.fromCharCode(publicationHashArray)
-
+    const publicationHash = getPublicationHash(publicationId)
     const permissionId = getPermissionId(publicationId, event.params.user)
     const permission = new Permission(permissionId)
     permission.address = event.params.user

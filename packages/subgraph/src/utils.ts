@@ -1,4 +1,4 @@
-import { Address, ByteArray, crypto, JSONValue, JSONValueKind, log, TypedMap } from "@graphprotocol/graph-ts"
+import { Address, ByteArray, Bytes, crypto, JSONValue, JSONValueKind, log, TypedMap } from "@graphprotocol/graph-ts"
 import { NewPost } from "../generated/Poster/Poster"
 import { Article, Permission, Publication } from "../generated/schema"
 
@@ -17,11 +17,8 @@ export const PERMISSION_ENTITY_TYPE = "Permission"
 export const getPublicationId = (event: NewPost): string =>
   "P-" + event.transaction.hash.toHex() + "-" + event.logIndex.toString()
 
-export const getPublicationHash = (publicationId: string ): ByteArray => {
-  // @ts-ignore
-  let enc = new TextEncoder('utf-8');
-  return crypto.keccak256(enc.encode(publicationId))
-}
+export const getPublicationHash = (publicationId: string): Bytes =>
+  Bytes.fromHexString(crypto.keccak256(ByteArray.fromUTF8(publicationId)).toHex())
 
 export const getArticleId = (event: NewPost): string =>
   "A-" + event.transaction.hash.toHex() + "-" + event.logIndex.toString()
