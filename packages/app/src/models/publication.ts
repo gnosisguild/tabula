@@ -20,6 +20,7 @@ export interface PermissionAction {
 
 export interface Publications {
   id: string
+  hash: string
   description?: string | null
   image?: string | null
   tags?: string[] | null
@@ -51,5 +52,6 @@ export interface Article {
     title: string
     image?: string
     permissions: Permission[]
+    hash: string
   }
 }

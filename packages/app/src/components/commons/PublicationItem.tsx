@@ -4,6 +4,7 @@ import { styled } from "@mui/styles"
 import { palette, typography } from "../../theme"
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos"
 import { Publications } from "../../models/publication"
+import DeterministicAvatar from "./DeterministicAvatar"
 
 const IPFS_GATEWAY = process.env.REACT_APP_IPFS_GATEWAY
 
@@ -38,9 +39,12 @@ const PublicationItem: React.FC<PublicationItemProps> = ({ publication, onClick 
         <Grid container flexDirection={"column"} gap={1}>
           <Grid item>
             <Grid container gap={1} alignItems="center">
-              <Avatar sx={{ width: 30, height: 30 }} src={image ? `${IPFS_GATEWAY}/${image}` : ""}>
-                {" "}
-              </Avatar>
+              {image ? (
+                <Avatar sx={{ width: 30, height: 30 }} src={image ? `${IPFS_GATEWAY}/${image}` : ""} />
+              ) : (
+                <DeterministicAvatar hash={publication.hash} width={30} height={30} />
+              )}
+
               <Typography fontFamily={typography.fontFamilies.sans} variant="subtitle1" fontWeight={600}>
                 {title}
               </Typography>

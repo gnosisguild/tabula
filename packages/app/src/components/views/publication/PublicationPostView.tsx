@@ -1,6 +1,6 @@
 import { Avatar, CircularProgress, Grid, styled, Typography } from "@mui/material"
 import { useWeb3React } from "@web3-react/core"
-import React, { useEffect, useState } from "react"
+import React, { Fragment, useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { chainNameToChainId } from "../../../constants/chain"
 import { usePublicationContext } from "../../../services/publications/contexts"
@@ -79,15 +79,18 @@ export const PublicationPostView: React.FC<PublicationPostViewProps> = ({ update
               <PublicationPostContainer container gap={3} alignItems={"center"}>
                 <Grid item>
                   {!editingPublication && (
-                    <DeterministicAvatar publicationId={publicationId} width={160} height={160} />
-                    // <Avatar
-                    //   sx={{ width: 160, height: 160 }}
-                    //   src={
-                    //     publication.image ? `${IPFS_GATEWAY}/${publication.image}` : "" // default Image goes here
-                    //   }
-                    // >
-                    //   {" "}
-                    // </Avatar>
+                    <Fragment>
+                      {publication.image ? (
+                        <Avatar
+                          sx={{ width: 160, height: 160 }}
+                          src={
+                            publication.image ? `${IPFS_GATEWAY}/${publication.hash}` : "" // default Image goes here
+                          }
+                        />
+                      ) : (
+                        <DeterministicAvatar hash={publication.hash} width={160} height={160} />
+                      )}
+                    </Fragment>
                   )}
                   {editingPublication && (
                     <PublicationAvatar defaultImage={publication.image} onFileSelected={saveDraftPublicationImage} />

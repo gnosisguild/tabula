@@ -10,6 +10,7 @@ import usePublication from "../../services/publications/hooks/usePublication"
 import { haveActionPermission } from "../../utils/permission"
 import { usePublicationContext } from "../../services/publications/contexts"
 import { UserOptions } from "../commons/UserOptions"
+import DeterministicAvatar from "../commons/DeterministicAvatar"
 
 const IPFS_GATEWAY = process.env.REACT_APP_IPFS_GATEWAY
 
@@ -73,12 +74,14 @@ const PublicationHeader: React.FC<Props> = ({ publication, showCreatePost }) => 
               sx={{ cursor: "pointer", transition: "opacity 0.25s ease-in-out", "&:hover": { opacity: 0.6 } }}
               onClick={handleNavigation}
             >
-              <Avatar
-                sx={{ width: 47, height: 47 }}
-                src={publication?.image ? `${IPFS_GATEWAY}/${publication.image}` : ""}
-              >
-                {" "}
-              </Avatar>
+              {publication?.image ? (
+                <Avatar
+                  sx={{ width: 47, height: 47 }}
+                  src={publication?.image ? `${IPFS_GATEWAY}/${publication.image}` : ""}
+                />
+              ) : (
+                <DeterministicAvatar hash={publication.hash} width={47} height={47} />
+              )}
 
               <Typography
                 color={palette.grays[1000]}

@@ -5,12 +5,12 @@ import Random, { genTokenData } from "./utils"
 import { Box } from "@mui/material"
 
 interface DeterministicAvatarProps {
-  publicationId?: string
+  hash?: string
   width?: number
   height?: number
 }
 
-const DeterministicAvatar: React.FC<DeterministicAvatarProps> = ({ publicationId, width = 160, height = 160 }) => {
+const DeterministicAvatar: React.FC<DeterministicAvatarProps> = ({ hash, width = 160, height = 160 }) => {
   let x: number = 10
   let y: number = 10
   let markingsLayers: number = 0
@@ -21,9 +21,9 @@ const DeterministicAvatar: React.FC<DeterministicAvatarProps> = ({ publicationId
   const divisions = 20
 
   let tokenData
-  if (publicationId) {
-    const publicationHash = publicationId?.replace("P-", "").replace(/(\d)-(\d*)/, "$1")
-    const publicationtokenId = publicationId?.match(/(\d)-(\d*)/)
+  if (hash) {
+    const publicationHash = hash?.replace("P-", "").replace(/(\d)-(\d*)/, "$1")
+    const publicationtokenId = hash?.match(/(\d)-(\d*)/)
     tokenData = { hash: publicationHash, tokenId: publicationtokenId && publicationtokenId[2] }
   } else {
     tokenData = genTokenData(123)

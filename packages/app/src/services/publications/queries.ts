@@ -20,6 +20,7 @@ const PUBLICATION_CONTENT = `
   tags
   title
   lastUpdated
+  hash
   ${PERMISSIONS}
 `
 
