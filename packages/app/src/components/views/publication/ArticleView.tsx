@@ -19,8 +19,12 @@ interface ArticleViewProps {
 }
 
 export const ArticleView: React.FC<ArticleViewProps> = ({ updateChainId }) => {
-  const { articleId, network } = useParams<{ articleId: string; network: string }>()
-  const { publicationId } = useParams<{ publicationId: string }>()
+  // try to take params from the URL
+  const { articleId, network, publicationId } =
+    useParams<{ articleId: string; network: string; publicationId: string }>()
+
+  // if the publicationId
+
   const { article, saveArticle, getIpfsData, markdownArticle, setMarkdownArticle, loading } = usePublicationContext()
   const { data, executeQuery, imageSrc } = useArticle(articleId || "")
   const publication = article?.publication

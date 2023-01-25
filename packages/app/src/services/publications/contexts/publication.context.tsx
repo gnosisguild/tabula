@@ -20,7 +20,7 @@ const PublicationProvider = ({ children }: PublicationProviderProps) => {
   const [loading, setLoading] = useState<boolean>(false)
   const ipfs = useIpfs()
 
-  // TODO: this must be changed it is not a safe, we do not know if IPFS is ready
+  // TODO: this must be changed it is not safe, we do not know if IPFS is ready
   const getIpfsData = async (hash: string) => {
     setLoading(true)
     const data = await ipfs.getText(hash)

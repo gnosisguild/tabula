@@ -50,14 +50,15 @@ const App: React.FC = () => {
               <Routes>
                 <Route path="/" element={<LandingView />} />
                 <Route path="/wallet" element={<WalletView />} />
-                <Route path="/:network">
-                  <Route path="pinning" element={<SetupIpfsView />} />
-                  <Route path="publications" element={<PublicationsView updateChainId={updateChainId} />} />
-                  <Route path=":publicationId" element={<PublicationView updateChainId={updateChainId} />} />
-                  <Route path=":publicationId/:postId/:type" element={<CreateArticleView />} />
-                  <Route path=":publicationId/:postId/preview/:type" element={<CreateArticleView2 />} />
-                  <Route path=":publicationId/:articleId" element={<ArticleView updateChainId={updateChainId} />} />
-                  <Route path=":publicationId/permissions/:type" element={<PermissionView />} />
+                <Route path="/pinning" element={<SetupIpfsView />} />
+                <Route path="/:network/publications" element={<PublicationsView updateChainId={updateChainId} />} />
+
+                {/* if there is no network (network is now optional), the publicationId must be an ENS */}
+                <Route path="/:network?/:publicationId" element={<PublicationView updateChainId={updateChainId} />}>
+                  <Route path=":postId/:type" element={<CreateArticleView />} />
+                  <Route path=":postId/preview/:type" element={<CreateArticleView2 />} />
+                  <Route path=":articleId" element={<ArticleView updateChainId={updateChainId} />} />
+                  <Route path="permissions/:type" element={<PermissionView />} />
                 </Route>
               </Routes>
             </PosterProvider>
