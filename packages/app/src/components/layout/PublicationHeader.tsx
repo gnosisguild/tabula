@@ -12,8 +12,6 @@ import { usePublicationContext } from "../../services/publications/contexts"
 import { UserOptions } from "../commons/UserOptions"
 import DeterministicAvatar from "../commons/DeterministicAvatar"
 
-const IPFS_GATEWAY = process.env.REACT_APP_IPFS_GATEWAY
-
 type Props = {
   publication?: Publications
   showCreatePost?: boolean
@@ -35,6 +33,7 @@ const PublicationHeader: React.FC<Props> = ({ publication, showCreatePost }) => 
   const { refetch, chainId: publicationChainId } = usePublication(publication?.id || "")
   const [show, setShow] = useState<boolean>(false)
   const permissions = publication && publication.permissions
+  const { imageSrc } = usePublication(publication?.id || "")
 
   useEffect(() => {
     if (location.pathname) {
@@ -75,10 +74,7 @@ const PublicationHeader: React.FC<Props> = ({ publication, showCreatePost }) => 
               onClick={handleNavigation}
             >
               {publication?.image ? (
-                <Avatar
-                  sx={{ width: 47, height: 47 }}
-                  src={publication?.image ? `${IPFS_GATEWAY}/${publication.image}` : ""}
-                />
+                <Avatar sx={{ width: 47, height: 47 }} src={imageSrc} />
               ) : (
                 <DeterministicAvatar hash={publication.hash} width={47} height={47} />
               )}
@@ -124,11 +120,11 @@ const PublicationHeader: React.FC<Props> = ({ publication, showCreatePost }) => 
                   variant="contained"
                   size={"large"}
                   onClick={() => {
-                    navigate(`../${publication?.id}/new-post/new`)
+                    navigate(`../${publication?.id}/new-article/new`)
                   }}
                 >
                   <AddIcon style={{ marginRight: 13 }} />
-                  New Post
+                  New Article
                 </Button>
               </Grid>
             )}

@@ -4,7 +4,7 @@ import Page from "../../layout/Page"
 import { palette, typography } from "../../../theme"
 import PublicationAvatar from "../../commons/PublicationAvatar"
 import PublicationItem from "../../commons/PublicationItem"
-import { useFiles } from "../../../hooks/useFiles"
+import { useIpfs } from "../../../hooks/useIpfs"
 import usePoster from "../../../services/poster/hooks/usePoster"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { useForm, Controller } from "react-hook-form"
@@ -19,8 +19,9 @@ import { CreatableSelect } from "../../commons/CreatableSelect"
 import { CreateSelectOption } from "../../../models/dropdown"
 import { usePosterContext } from "../../../services/poster/context"
 import { chainIdToChainName } from "../../../constants/chain"
+import { useDynamicFavIcon } from "../../../hooks/useDynamicFavIco"
 
-const PublishAvatarContainer = styled(Grid)(({ theme }) => ({
+const PublicationsAvatarContainer = styled(Grid)(({ theme }) => ({
   display: "flex",
   [`${theme.breakpoints.down("md")}`]: {
     justifyContent: "center",
@@ -34,7 +35,7 @@ const PublishAvatarContainer = styled(Grid)(({ theme }) => ({
   },
 }))
 
-const PublishButton = styled(Button)(({ theme }) => ({
+const PublicationsButton = styled(Button)(({ theme }) => ({
   [`${theme.breakpoints.down("md")}`]: {
     width: "100%",
   },
@@ -44,7 +45,7 @@ const PublishButton = styled(Button)(({ theme }) => ({
   },
 }))
 
-const PublishDividerTextContainer = styled(Grid)({
+const PublicationsDividerTextContainer = styled(Grid)({
   background: palette.grays[100],
   width: 40,
   height: 40,
@@ -66,15 +67,16 @@ type Post = {
   description?: string
 }
 
-interface PublishViewProps {
+interface PublicationsViewProps {
   updateChainId: (chainId: number) => void
 }
 
-export const PublishView: React.FC<PublishViewProps> = ({ updateChainId }) => {
+export const PublicationsView: React.FC<PublicationsViewProps> = ({ updateChainId }) => {
   const navigate = useNavigate()
   const { account, chainId } = useWeb3React()
   const { executePublication } = usePoster()
   const { setLastPathWithChainName } = usePosterContext()
+  useDynamicFavIcon(undefined)
   const [loading, setLoading] = useState<boolean>(false)
   const {
     data: publications,
@@ -88,7 +90,7 @@ export const PublishView: React.FC<PublishViewProps> = ({ updateChainId }) => {
   const [tags, setTags] = useState<string[]>([])
   const [publicationsToShow, setPublicationsToShow] = useState<Publications[]>([])
   const [publicationImg, setPublicationImg] = useState<File>()
-  const { uploadFile, ipfs } = useFiles()
+  const ipfs = useIpfs()
   const {
     control,
     handleSubmit,
@@ -141,8 +143,8 @@ export const PublishView: React.FC<PublishViewProps> = ({ updateChainId }) => {
     setLoading(true)
     const { title, description } = data
     let image
-    if (ipfs && publicationImg) {
-      image = await uploadFile(publicationImg)
+    if (ipfs.isReady && publicationImg) {
+      image = await ipfs.uploadContent(publicationImg)
     }
     if (title) {
       await executePublication({
@@ -194,11 +196,11 @@ export const PublishView: React.FC<PublishViewProps> = ({ updateChainId }) => {
               </Grid>
               <Grid my={3}>
                 <Divider>
-                  <PublishDividerTextContainer>
+                  <PublicationsDividerTextContainer>
                     <Typography variant="body1" fontFamily={typography.fontFamilies.sans}>
                       OR
                     </Typography>
-                  </PublishDividerTextContainer>
+                  </PublicationsDividerTextContainer>
                 </Divider>
               </Grid>
             </Grid>
@@ -210,9 +212,9 @@ export const PublishView: React.FC<PublishViewProps> = ({ updateChainId }) => {
             <Typography variant="body1">Set up the publication&#39;s profile</Typography>
           </Grid>
           <Grid container alignItems="center" mt={4}>
-            <PublishAvatarContainer item xs={12} md={4} sx={{ display: "flex" }}>
+            <PublicationsAvatarContainer item xs={12} md={4} sx={{ display: "flex" }}>
               <PublicationAvatar onFileSelected={setPublicationImg} />
-            </PublishAvatarContainer>
+            </PublicationsAvatarContainer>
             <Grid item xs={12} md={8}>
               <Grid container flexDirection="column" gap={2}>
                 <Grid item>
@@ -249,10 +251,10 @@ export const PublishView: React.FC<PublishViewProps> = ({ updateChainId }) => {
           </Grid>
 
           <Grid item display="flex" justifyContent={"flex-end"} mt={3}>
-            <PublishButton variant="contained" type="submit" disabled={loading || indexing}>
+            <PublicationsButton variant="contained" type="submit" disabled={loading || indexing}>
               {loading && <CircularProgress size={20} sx={{ marginRight: 1 }} />}
               {indexing ? "Indexing..." : "Create Publication"}
-            </PublishButton>
+            </PublicationsButton>
           </Grid>
         </ViewContainer>
       </form>

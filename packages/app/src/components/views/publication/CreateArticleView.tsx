@@ -6,7 +6,7 @@ import { usePublicationContext } from "../../../services/publications/contexts"
 import { palette } from "../../../theme"
 import { ViewContainer } from "../../commons/ViewContainer"
 import PublicationPage from "../../layout/PublicationPage"
-import ArticleTabs from "./ArticleTabs"
+import ArticleTabs from "./components/ArticleTabs"
 import { Markdown } from "../../commons/Markdown"
 import * as yup from "yup"
 import { yupResolver } from "@hookform/resolvers/yup"
@@ -24,7 +24,7 @@ const articleSchema = yup.object().shape({
   article: yup.string().required(),
 })
 
-const DeletePostButton = styled(Button)({
+const DeleteArticleButton = styled(Button)({
   border: `2px solid ${palette.grays[400]}`,
   background: palette.whites[400],
   color: palette.grays[800],
@@ -33,11 +33,11 @@ const DeletePostButton = styled(Button)({
   },
 })
 
-export const CreatePostView: React.FC = () => {
+export const CreateArticleView: React.FC = () => {
   const navigate = useNavigate()
   const { account } = useWeb3React()
   const { deleteArticle } = usePoster()
-  const { publication, article, draftArticle, getPinnedData, markdownArticle, saveDraftArticle, saveArticle } =
+  const { publication, article, draftArticle, getIpfsData, markdownArticle, saveDraftArticle, saveArticle } =
     usePublicationContext()
   const { indexing, setExecutePollInterval, transactionCompleted, setCurrentArticleId } = usePublication(
     publication?.id || "",
@@ -65,7 +65,7 @@ export const CreatePostView: React.FC = () => {
       const { title } = article
       setValue("title", title)
       if (!markdownArticle) {
-        getPinnedData(article.article)
+        getIpfsData(article.article)
       }
       if (markdownArticle) {
         setValue("article", markdownArticle)
@@ -76,7 +76,7 @@ export const CreatePostView: React.FC = () => {
       setValue("title", title)
       setValue("article", articleDescription)
     }
-  }, [type, article, setValue, isValidHash, markdownArticle, getPinnedData, draftArticle])
+  }, [type, article, setValue, isValidHash, markdownArticle, getIpfsData, draftArticle])
 
   useEffect(() => {
     if (transactionCompleted) {
@@ -85,8 +85,7 @@ export const CreatePostView: React.FC = () => {
     }
   }, [navigate, saveDraftArticle, transactionCompleted])
 
-
-  const handleChange = (event: ChangeEvent<HTMLInputElement> ) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setValue("article", event.target.value)
   }
 
@@ -163,32 +162,28 @@ export const CreatePostView: React.FC = () => {
                 control={control}
                 name="article"
                 render={({ field }) => {
-                  return (
-                    currentTab === "write" ? (
-                      <TextField
-                        {...field}
-                        placeholder="Start your post..."
-                        multiline
-                        rows={14}
-                        onChange={handleChange}
-                        sx={{
-                          width: "100%",
-                          "& .MuiInputBase-root": {
-                            borderTopLeftRadius: 0,
-                          }
-                        }}
-                      />
-                    ) : (
-                      <Box sx={{borderTop: `1px solid ${palette.grays[400]}`, pt: 1}}>
-                        {field.value ? (
-                          <Markdown>{field.value}</Markdown>
-                        ) : (
-                          <Box sx={{color: palette.grays[800], fontSize: 14}}>
-                            Nothing to preview
-                          </Box>
-                        )}
-                      </Box>
-                    )
+                  return currentTab === "write" ? (
+                    <TextField
+                      {...field}
+                      placeholder="Start your article..."
+                      multiline
+                      rows={14}
+                      onChange={handleChange}
+                      sx={{
+                        width: "100%",
+                        "& .MuiInputBase-root": {
+                          borderTopLeftRadius: 0,
+                        },
+                      }}
+                    />
+                  ) : (
+                    <Box sx={{ borderTop: `1px solid ${palette.grays[400]}`, pt: 1 }}>
+                      {field.value ? (
+                        <Markdown>{field.value}</Markdown>
+                      ) : (
+                        <Box sx={{ color: palette.grays[800], fontSize: 14 }}>Nothing to preview</Box>
+                      )}
+                    </Box>
                   )
                 }}
                 rules={{ required: true }}
@@ -199,7 +194,6 @@ export const CreatePostView: React.FC = () => {
                   {errors.article.message}
                 </FormHelperText>
               )}
-
             </Grid>
             {type === "new" && (
               <Grid item xs={12} mt={1}>
@@ -217,7 +211,7 @@ export const CreatePostView: React.FC = () => {
               <Grid item xs={12} mt={1}>
                 <Grid container justifyContent={"space-between"}>
                   {havePermissionToDelete && (
-                    <DeletePostButton
+                    <DeleteArticleButton
                       variant="contained"
                       size="large"
                       onClick={handleDeleteArticle}
@@ -226,12 +220,12 @@ export const CreatePostView: React.FC = () => {
                       sx={{ whiteSpace: "nowrap" }}
                     >
                       {loading && <CircularProgress size={20} sx={{ marginRight: 1 }} />}
-                      {indexing ? "Indexing..." : "Delete Post"}
-                    </DeletePostButton>
+                      {indexing ? "Indexing..." : "Delete Article"}
+                    </DeleteArticleButton>
                   )}
                   {havePermissionToUpdate && (
                     <Button variant="contained" size="large" type="submit" disabled={loading || indexing}>
-                      Update Post
+                      Update Article
                     </Button>
                   )}
                 </Grid>

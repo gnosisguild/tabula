@@ -1,29 +1,28 @@
 import React, { useEffect, useState } from "react"
 import { Box, Button, Chip, CircularProgress, Grid, Stack, Typography } from "@mui/material"
 import { styled } from "@mui/styles"
-import { palette, typography } from "../../theme"
+import { palette, typography } from "../../../../theme"
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos"
-import { Article } from "../../models/publication"
+import { Article } from "../../../../models/publication"
 import EditIcon from "@mui/icons-material/Edit"
-import { shortTitle } from "../../utils/string"
+import { shortTitle } from "../../../../utils/string"
 import moment from "moment"
-import { usePublicationContext } from "../../services/publications/contexts"
+import { usePublicationContext } from "../../../../services/publications/contexts"
 import { useNavigate } from "react-router-dom"
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline"
-import usePoster from "../../services/poster/hooks/usePoster"
-import usePublication from "../../services/publications/hooks/usePublication"
-import { usePosterContext } from "../../services/poster/context"
+import usePoster from "../../../../services/poster/hooks/usePoster"
+import usePublication from "../../../../services/publications/hooks/usePublication"
+import { usePosterContext } from "../../../../services/poster/context"
+import useArticle from "../../../../services/publications/hooks/useArticle"
 
-const IPFS_GATEWAY = process.env.REACT_APP_IPFS_GATEWAY
-
-const PostItemContainer = styled(Box)({
+const ArticleItemContainer = styled(Box)({
   minHeight: "105px",
   background: palette.grays[100],
   borderRadius: 4,
   padding: 20,
 })
 
-const PostItemEditButton = styled(Button)({
+const ArticleItemEditButton = styled(Button)({
   border: `2px solid ${palette.grays[400]}`,
   background: palette.whites[400],
   color: palette.grays[800],
@@ -38,12 +37,12 @@ const ThumbnailImage = styled("img")({
   objectFit: "cover",
 })
 
-type PostItemProps = {
+type ArticleItemProps = {
   article: Article
   couldUpdate: boolean
   couldDelete: boolean
 }
-const PostItem: React.FC<PostItemProps> = ({ article, couldUpdate, couldDelete }) => {
+const ArticleItem: React.FC<ArticleItemProps> = ({ article, couldUpdate, couldDelete }) => {
   const navigate = useNavigate()
   const { saveArticle } = usePublicationContext()
   const { setLastPathWithChainName } = usePosterContext()
@@ -52,6 +51,7 @@ const PostItem: React.FC<PostItemProps> = ({ article, couldUpdate, couldDelete }
   const { indexing, transactionCompleted, setExecutePollInterval, setCurrentArticleId } = usePublication(
     publication?.id || "",
   )
+  const { imageSrc } = useArticle(article.id || "")
   const articleTitle = shortTitle(title, 30)
   const articleDescription = description && shortTitle(description, 165)
   const date = lastUpdated && new Date(parseInt(lastUpdated) * 1000)
@@ -86,11 +86,11 @@ const PostItem: React.FC<PostItemProps> = ({ article, couldUpdate, couldDelete }
   }
 
   return (
-    <PostItemContainer>
+    <ArticleItemContainer>
       <Grid container spacing={2}>
         {image && (
           <Grid item xs={4}>
-            <ThumbnailImage src={`${IPFS_GATEWAY}/${image}`} />
+            <ThumbnailImage src={imageSrc} />
           </Grid>
         )}
         <Grid item xs={8}>
@@ -115,8 +115,8 @@ const PostItem: React.FC<PostItemProps> = ({ article, couldUpdate, couldDelete }
                 tags.length > 0 &&
                 tags.map((tag, index) => {
                   return (
-                    <Box sx={{ display: "flex", p: "2px" }}>
-                      <Chip label={tag} size="small" key={index} />
+                    <Box sx={{ display: "flex", p: "2px" }} key={index}>
+                      <Chip label={tag} size="small" />
                     </Box>
                   )
                 })}
@@ -143,7 +143,7 @@ const PostItem: React.FC<PostItemProps> = ({ article, couldUpdate, couldDelete }
           <Grid container gap={2}>
             {couldUpdate && (
               <Box>
-                <PostItemEditButton
+                <ArticleItemEditButton
                   onClick={(e) => {
                     e.stopPropagation()
                     navigate(`../${publicationId}/${id}/edit`)
@@ -154,13 +154,13 @@ const PostItem: React.FC<PostItemProps> = ({ article, couldUpdate, couldDelete }
                   startIcon={<EditIcon sx={{ width: 16, height: 16 }} />}
                   disabled={loading || indexing}
                 >
-                  Edit Post
-                </PostItemEditButton>
+                  Edit Article
+                </ArticleItemEditButton>
               </Box>
             )}
             {couldDelete && (
               <Box>
-                <PostItemEditButton
+                <ArticleItemEditButton
                   onClick={handleDeleteArticle}
                   variant="contained"
                   size="small"
@@ -168,8 +168,8 @@ const PostItem: React.FC<PostItemProps> = ({ article, couldUpdate, couldDelete }
                   startIcon={<DeleteOutlineIcon sx={{ width: 16, height: 16 }} />}
                 >
                   {loading && <CircularProgress size={20} sx={{ marginRight: 1 }} />}
-                  {indexing ? "Indexing..." : "Delete Post"}
-                </PostItemEditButton>
+                  {indexing ? "Indexing..." : "Delete Article"}
+                </ArticleItemEditButton>
               </Box>
             )}
           </Grid>
@@ -186,11 +186,11 @@ const PostItem: React.FC<PostItemProps> = ({ article, couldUpdate, couldDelete }
             saveArticle(article)
           }}
         >
-          Read Post
+          Read Article
         </Button>
       </Box>
-    </PostItemContainer>
+    </ArticleItemContainer>
   )
 }
 
-export default PostItem
+export default ArticleItem

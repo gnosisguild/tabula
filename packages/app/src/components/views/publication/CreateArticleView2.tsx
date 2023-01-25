@@ -7,7 +7,7 @@ import PublicationPage from "../../layout/PublicationPage"
 import { useNavigate, useParams } from "react-router-dom"
 import { UploadFile } from "../../commons/UploadFile"
 import { Controller, useForm } from "react-hook-form"
-import { useFiles } from "../../../hooks/useFiles"
+import { useIpfs } from "../../../hooks/useIpfs"
 import usePoster from "../../../services/poster/hooks/usePoster"
 import { useWeb3React } from "@web3-react/core"
 import useArticles from "../../../services/publications/hooks/useArticles"
@@ -19,7 +19,7 @@ import { CreatableSelect } from "../../commons/CreatableSelect"
 import { CreateSelectOption } from "../../../models/dropdown"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack"
 
-export const PreviewPostView: React.FC = () => {
+export const CreateArticleView2: React.FC = () => {
   const navigate = useNavigate()
 
   const { account } = useWeb3React()
@@ -30,7 +30,7 @@ export const PreviewPostView: React.FC = () => {
   const [authors, setAuthors] = useState<string[]>([])
   const [articleImg, setArticleImg] = useState<File | undefined>(undefined)
   const { control, handleSubmit, setValue } = useForm({ defaultValues: { description: "" } })
-  const { uploadFile, ipfs } = useFiles()
+  const { uploadContent, ipfs } = useIpfs()
   const { createArticle, updateArticle } = usePoster()
   const {
     indexing: createArticleIndexing,
@@ -63,7 +63,7 @@ export const PreviewPostView: React.FC = () => {
       let hashArticle
       let imageUrl
       if (ipfs && articleImg) {
-        image = await uploadFile(articleImg)
+        image = await uploadContent(articleImg)
         if (image.path) {
           imageUrl = image.path
         }
@@ -74,7 +74,7 @@ export const PreviewPostView: React.FC = () => {
       }
 
       if (pinning && draftArticleText) {
-        hashArticle = await uploadFile(draftArticleText)
+        hashArticle = await uploadContent(draftArticleText)
       }
 
       if (title && authors.length) {
@@ -208,7 +208,7 @@ export const PreviewPostView: React.FC = () => {
             >
               <ArrowBackIcon color="secondary" />
               <Typography color="secondary" variant="subtitle2" sx={{ textDecoration: "underline" }}>
-                Back to Edit Post
+                Back to Edit Article
               </Typography>
             </Box>
             <UploadFile defaultImage={article?.image} onFileSelected={setArticleImg} />
@@ -265,9 +265,7 @@ export const PreviewPostView: React.FC = () => {
                 errorMsg={tags.length && tags.length >= 6 ? "Add up to 5 tags for your article" : undefined}
               />
             </Stack>
-            {!pinning && (
-              <PinningAlert />
-            )}
+            {!pinning && <PinningAlert />}
             <Stack direction="row" justifyContent={"space-between"} spacing={2}>
               <Button
                 variant="outlined"
