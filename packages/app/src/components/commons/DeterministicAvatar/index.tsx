@@ -3,6 +3,7 @@ import Sketch from "react-p5"
 import p5Types from "p5"
 import Random, { genTokenData } from "./utils"
 import { Box } from "@mui/material"
+import { usePublicationContext } from "../../../services/publications/contexts"
 
 interface DeterministicAvatarProps {
   hash?: string
@@ -25,6 +26,7 @@ const DeterministicAvatar: React.FC<DeterministicAvatarProps> = ({
   let layers: any[] = []
   let palette: any[] = []
   const divisions = 20
+  const { setPublicationAvatar, publicationAvatar } = usePublicationContext()
 
   let tokenData
   if (hash) {
@@ -124,6 +126,7 @@ const DeterministicAvatar: React.FC<DeterministicAvatarProps> = ({
   }
 
   const setup = (p5: p5Types, canvasParentRef: Element) => {
+    p5.noLoop()
     p5.createCanvas(width, height).parent(canvasParentRef)
     p5.colorMode(p5.HSB, 360, 100, 100, 1)
     p5.pixelDensity(2)
@@ -142,9 +145,12 @@ const DeterministicAvatar: React.FC<DeterministicAvatarProps> = ({
     renderMarkings(p5)
     renderNoise(p5)
     addBorder(p5)
+    //@ts-ignore
+    const canvas = p5.canvas.toDataURL("image/png")
+    if (!publicationAvatar) {
+      setPublicationAvatar(canvas)
+    }
     if (onImageGenerated) {
-      //@ts-ignore
-      const canvas = p5.canvas.toDataURL("image/png")
       onImageGenerated(canvas)
     }
   }
@@ -225,7 +231,6 @@ const DeterministicAvatar: React.FC<DeterministicAvatarProps> = ({
         })
       }
     })
-    p5.noLoop()
   }
 
   const renderNoise = (p5: p5Types) => {
@@ -243,7 +248,6 @@ const DeterministicAvatar: React.FC<DeterministicAvatarProps> = ({
     p5.stroke(outerStrokeColor)
     p5.strokeWeight(strokeWeight * 2) // half of the border gets cropped.
     p5.ellipse(0, 0, width - strokeWeight, height - strokeWeight)
-    p5.noLoop()
   }
 
   return (
