@@ -8,6 +8,7 @@ import { PublicationContextType, PublicationProviderProps } from "./publication.
 const [usePublicationContext, PublicationContextProvider] = createGenericContext<PublicationContextType>()
 
 const PublicationProvider = ({ children }: PublicationProviderProps) => {
+  const [publicationAvatar, setPublicationAvatar] = useState<string | undefined>(undefined)
   const [currentPath, setCurrentPath] = useState<string | undefined>(undefined)
   const [publications, setPublications] = useState<Publications[] | undefined>(undefined)
   const [publication, setPublication] = useState<Publications | undefined>(undefined)
@@ -50,6 +51,8 @@ const PublicationProvider = ({ children }: PublicationProviderProps) => {
         currentPath,
         markdownArticle,
         loading,
+        publicationAvatar,
+        setPublicationAvatar,
         setMarkdownArticle,
         getIpfsData,
         setCurrentPath,

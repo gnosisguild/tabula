@@ -12,6 +12,8 @@ export type PublicationContextType = {
   currentPath: string | undefined
   markdownArticle: string | undefined
   loading: boolean
+  publicationAvatar: string | undefined
+  setPublicationAvatar: (image: string | undefined) => void
   getIpfsData: (hash: string) => void
   setMarkdownArticle: (markdown: string | undefined) => void
   saveIsEditing: (isEditing: boolean) => void

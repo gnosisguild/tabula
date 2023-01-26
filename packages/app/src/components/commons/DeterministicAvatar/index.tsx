@@ -8,9 +8,15 @@ interface DeterministicAvatarProps {
   hash?: string
   width?: number
   height?: number
+  onImageGenerated?: (image: string) => void
 }
 
-const DeterministicAvatar: React.FC<DeterministicAvatarProps> = ({ hash, width = 160, height = 160 }) => {
+const DeterministicAvatar: React.FC<DeterministicAvatarProps> = ({
+  hash,
+  width = 160,
+  height = 160,
+  onImageGenerated,
+}) => {
   let x: number = 10
   let y: number = 10
   let markingsLayers: number = 0
@@ -136,6 +142,11 @@ const DeterministicAvatar: React.FC<DeterministicAvatarProps> = ({ hash, width =
     renderMarkings(p5)
     renderNoise(p5)
     addBorder(p5)
+    if (onImageGenerated) {
+      //@ts-ignore
+      const canvas = p5.canvas.toDataURL("image/png")
+      onImageGenerated(canvas)
+    }
   }
 
   const initializeMarkings = (p5: p5Types) => {
@@ -181,6 +192,7 @@ const DeterministicAvatar: React.FC<DeterministicAvatarProps> = ({ hash, width =
   const initializeNoiseLayer = (p5: p5Types) => {
     noiseOpacity = R.random_num(0.1, 0.3)
     noiseImg = p5.createGraphics(width, height)
+
     for (x = 0; x <= width; x++) {
       for (y = 0; y <= height; y++) {
         noiseImg.noStroke()
@@ -217,18 +229,20 @@ const DeterministicAvatar: React.FC<DeterministicAvatarProps> = ({ hash, width =
   }
 
   const renderNoise = (p5: p5Types) => {
-    p5.translate(p5.width / 2, p5.height / 2)
-    p5.blendMode(p5.HARD_LIGHT)
-    p5.tint(255, noiseOpacity)
-    p5.image(noiseImg, 0, 0, p5.width, p5.height)
-    p5.blendMode(p5.BLEND)
+    if (noiseImg) {
+      p5.translate(p5.width / 2, p5.height / 2)
+      p5.blendMode(p5.HARD_LIGHT)
+      p5.tint(255, noiseOpacity)
+      p5.image(noiseImg, 0, 0, p5.width, p5.height)
+      p5.blendMode(p5.BLEND)
+    }
   }
 
   const addBorder = (p5: p5Types) => {
     p5.noFill()
     p5.stroke(outerStrokeColor)
     p5.strokeWeight(strokeWeight * 2) // half of the border gets cropped.
-    p5.ellipse(0, 0, width, height)
+    p5.ellipse(0, 0, width - strokeWeight, height - strokeWeight)
     p5.noLoop()
   }
 

@@ -20,6 +20,8 @@ import { CreateSelectOption } from "../../../models/dropdown"
 import { usePosterContext } from "../../../services/poster/context"
 import { chainIdToChainName } from "../../../constants/chain"
 import { useDynamicFavIcon } from "../../../hooks/useDynamicFavIco"
+import { Helmet } from "react-helmet"
+import { useEffectOnce } from "../../../hooks/useEffectOnce"
 
 const PublicationsAvatarContainer = styled(Grid)(({ theme }) => ({
   display: "flex",
@@ -110,17 +112,17 @@ export const PublicationsView: React.FC<PublicationsViewProps> = ({ updateChainI
     }
   }, [chainId, updateChainId, navigate])
 
-  useEffect(() => {
+  useEffectOnce(() => {
     if (!publications) {
       executeQuery()
     }
-  }, [publications, executeQuery])
+  })
 
   useEffect(() => {
-    if (publications && publications.length && account) {
+    if (publications && publications.length && account && publicationsToShow.length === 0) {
       handlePublicationsToShow(publications, account)
     }
-  }, [publications, account])
+  }, [publications, account, publicationsToShow])
 
   useEffect(() => {
     if (redirect && lastPublicationId) {
@@ -174,6 +176,23 @@ export const PublicationsView: React.FC<PublicationsViewProps> = ({ updateChainI
 
   return (
     <Page showBadge>
+      <Helmet>
+        <title>Tabula</title>
+
+        <meta property="og:title" content="tabula" />
+
+        <meta property="og:title" content="Tabula" />
+        <meta property="og:site_name" content="Tabula" />
+        <meta
+          property="og:description"
+          content="Instant web3 publications for writers, DAOs, and any Ethereum-based account."
+        />
+        <meta
+          name="description"
+          content="Instant web3 publications for writers, DAOs, and any Ethereum-based account."
+        />
+        <meta property="og:url" content="https://tabula.gg" />
+      </Helmet>
       <form onSubmit={handleSubmit((data) => onSubmitHandler(data as Post))}>
         <ViewContainer maxWidth="sm">
           <Grid mt={10}>

@@ -15,8 +15,7 @@ import { PermissionSection } from "./components/PermissionSection"
 import ArticleSection from "./components/ArticleSection"
 import PublicationTabs from "./components/PublicationTabs"
 import { SettingSection } from "./components/SettingSection"
-
-const IPFS_GATEWAY = process.env.REACT_APP_IPFS_GATEWAY
+import { useDynamicFavIcon } from "../../../hooks/useDynamicFavIco"
 
 const PublicationContainer = styled(Grid)(({ theme }) => ({
   [`${theme.breakpoints.down("md")}`]: {
@@ -37,9 +36,13 @@ interface PublicationViewProps {
 export const PublicationView: React.FC<PublicationViewProps> = ({ updateChainId }) => {
   const { publicationId, network } = useParams<{ publicationId: string; network: string }>()
   const { account } = useWeb3React()
-  const { savePublication, editingPublication, saveDraftPublicationImage } = usePublicationContext()
+  const { imageSrc } = usePublication(publicationId || "")
+  const { savePublication, editingPublication, saveDraftPublicationImage, setPublicationAvatar, publicationAvatar } =
+    usePublicationContext()
   const { data: publication, loading, executeQuery } = usePublication(publicationId || "")
   const [currentTab, setCurrentTab] = useState<"articles" | "permissions" | "settings">("articles")
+  const [imageGenerated, setImageGenerated] = useState<string>()
+  useDynamicFavIcon(imageGenerated)
   const permissions = publication && publication.permissions
   const havePermission = permissions ? isOwner(permissions, account || "") : false
   const havePermissionToUpdate = permissions
@@ -65,6 +68,13 @@ export const PublicationView: React.FC<PublicationViewProps> = ({ updateChainId 
     }
   }, [publication, savePublication])
 
+  const handleImageGenerated = (image: string) => {
+    if (!publicationAvatar) {
+      setImageGenerated(image)
+      setPublicationAvatar(image)
+    }
+  }
+
   return (
     <PublicationPage publication={publication} showCreatePost={true}>
       {loading && (
@@ -81,19 +91,23 @@ export const PublicationView: React.FC<PublicationViewProps> = ({ updateChainId 
                   {!editingPublication && (
                     <Fragment>
                       {publication.image ? (
-                        <Avatar
-                          sx={{ width: 160, height: 160 }}
-                          src={
-                            publication.image ? `${IPFS_GATEWAY}/${publication.hash}` : "" // default Image goes here
-                          }
-                        />
+                        <Avatar sx={{ width: 160, height: 160 }} src={imageSrc} />
                       ) : (
-                        <DeterministicAvatar hash={publication.hash} width={160} height={160} />
+                        <DeterministicAvatar
+                          hash={publication.hash}
+                          width={160}
+                          height={160}
+                          onImageGenerated={handleImageGenerated}
+                        />
                       )}
                     </Fragment>
                   )}
                   {editingPublication && (
-                    <PublicationAvatar defaultImage={publication.image} onFileSelected={saveDraftPublicationImage} />
+                    <PublicationAvatar
+                      defaultImage={publication.image ?? publicationAvatar}
+                      onFileSelected={saveDraftPublicationImage}
+                      skipIPFSValidation
+                    />
                   )}
                 </Grid>
                 <Grid item>

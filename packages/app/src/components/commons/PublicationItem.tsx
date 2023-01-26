@@ -34,7 +34,7 @@ const PublicationItem: React.FC<PublicationItemProps> = ({ publication, onClick 
   const { title, tags } = publication
   const { imageSrc } = usePublication(publication.id || "")
 
-  return (
+  return title ? (
     <PublicationItemContainer container alignItems={"center"} onClick={onClick}>
       <Grid item xs={11}>
         <Grid container flexDirection={"column"} gap={1}>
@@ -66,7 +66,7 @@ const PublicationItem: React.FC<PublicationItemProps> = ({ publication, onClick 
         <ArrowForwardIosIcon />
       </PublicationIconGrid>
     </PublicationItemContainer>
-  )
+  ) : null
 }
 
 export default PublicationItem
