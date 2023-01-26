@@ -56,7 +56,7 @@ const PublicationAvatar: React.FC<PublicationAvatarProps> = ({ skipIPFSValidatio
         setDefaultImageSrc(defaultImage)
       }
     }
-    if (ipfs.isReady && defaultImage != null && defaultImageSrc === "" && !removeImage) {
+    if (defaultImage != null && defaultImageSrc === "" && !removeImage) {
       getDefaultImageSrc()
     }
   }, [defaultImage, ipfs, defaultImageSrc, removeImage, skipIPFSValidation])
