@@ -5,18 +5,19 @@ import { Publications } from "../../models/publication"
 import { Helmet } from "react-helmet"
 import { useDynamicFavIcon } from "../../hooks/useDynamicFavIco"
 import { usePublicationContext } from "../../services/publications/contexts"
+import usePublication from "../../services/publications/hooks/usePublication"
 
 type Props = {
   publication?: Publications
   showCreatePost?: boolean
+  children: React.ReactNode
 }
 
 const PublicationPage: React.FC<Props> = ({ children, publication, showCreatePost }) => {
   const { publicationAvatar } = usePublicationContext()
-  const image = publication?.image
-  useDynamicFavIcon(image ? image : publicationAvatar)
+  const { imageSrc } = usePublication(publication?.id || "")
+  useDynamicFavIcon(imageSrc ? imageSrc : publicationAvatar)
 
-  
   return (
     <>
       <Helmet>

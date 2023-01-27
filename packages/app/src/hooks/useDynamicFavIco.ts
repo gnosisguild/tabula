@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 
-export const useDynamicFavIcon = (image: string | null | undefined) => {
-  const favIcon = process.env.PUBLIC_URL + "/favicon.ico"
+export const useDynamicFavIcon = (imageSrc: string | null | undefined) => {
+  const defaultFavIcon = process.env.PUBLIC_URL + "/favicon.ico"
   useEffect(() => {
     let link = document.querySelector("link[rel~='icon']") as any
     if (!link) {
@@ -9,6 +9,6 @@ export const useDynamicFavIcon = (image: string | null | undefined) => {
       link.rel = "icon"
       document.getElementsByTagName("head")[0].appendChild(link)
     }
-    link.href = image ? image : favIcon
-  }, [favIcon, image])
+    link.href = imageSrc ?? defaultFavIcon
+  }, [defaultFavIcon, imageSrc])
 }

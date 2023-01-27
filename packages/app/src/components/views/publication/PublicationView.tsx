@@ -36,10 +36,9 @@ interface PublicationViewProps {
 export const PublicationView: React.FC<PublicationViewProps> = ({ updateChainId }) => {
   const { publicationId, network } = useParams<{ publicationId: string; network: string }>()
   const { account } = useWeb3React()
-  const { imageSrc } = usePublication(publicationId || "")
   const { savePublication, editingPublication, saveDraftPublicationImage, setPublicationAvatar, publicationAvatar } =
     usePublicationContext()
-  const { data: publication, loading, executeQuery } = usePublication(publicationId || "")
+  const { data: publication, loading, executeQuery, imageSrc } = usePublication(publicationId || "")
   const [currentTab, setCurrentTab] = useState<"articles" | "permissions" | "settings">("articles")
   const [imageGenerated, setImageGenerated] = useState<string>()
   useDynamicFavIcon(imageGenerated)
@@ -90,7 +89,7 @@ export const PublicationView: React.FC<PublicationViewProps> = ({ updateChainId 
                 <Grid item>
                   {!editingPublication && (
                     <Fragment>
-                      {publication.image ? (
+                      {imageSrc ? (
                         <Avatar sx={{ width: 160, height: 160 }} src={imageSrc} />
                       ) : (
                         <DeterministicAvatar
