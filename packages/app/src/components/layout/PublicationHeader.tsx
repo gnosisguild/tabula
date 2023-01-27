@@ -117,7 +117,7 @@ const PublicationHeader: React.FC<Props> = ({ publication, showCreatePost }) => 
                   variant="contained"
                   size={"large"}
                   onClick={() => {
-                    navigate(`../${publication?.id}/new-article/new`)
+                    navigate(`./new`)
                   }}
                 >
                   <AddIcon style={{ marginRight: 13 }} />

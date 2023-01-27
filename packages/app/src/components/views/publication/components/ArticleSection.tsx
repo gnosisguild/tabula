@@ -8,7 +8,6 @@ import { useWeb3React } from "@web3-react/core"
 import usePublication from "../../../../services/publications/hooks/usePublication"
 import ArticleItem from "./ArticleItem"
 
-
 const ArticleSection: React.FC = () => {
   const navigate = useNavigate()
   const { account } = useWeb3React()
@@ -41,7 +40,7 @@ const ArticleSection: React.FC = () => {
         </Grid>
         {havePermissionToCreate && (
           <Grid item>
-            <Button variant="contained" size="medium" onClick={() => navigate(`new-article/new`)}>
+            <Button variant="contained" size="medium" onClick={() => navigate(`new`)}>
               <AddIcon style={{ marginRight: 13 }} />
               New Article
             </Button>
@@ -53,7 +52,11 @@ const ArticleSection: React.FC = () => {
           articles.length > 0 &&
           articles.map((article) => (
             <Grid item sx={{ width: "100%" }} key={article.id || ""}>
-              <ArticleItem article={article} couldUpdate={havePermissionToUpdate} couldDelete={havePermissionToDelete} />
+              <ArticleItem
+                article={article}
+                couldUpdate={havePermissionToUpdate}
+                couldDelete={havePermissionToDelete}
+              />
             </Grid>
           ))}
       </Grid>

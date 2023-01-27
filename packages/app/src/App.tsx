@@ -48,17 +48,31 @@ const App: React.FC = () => {
             <PosterProvider>
               <ScrollToTop />
               <Routes>
+                {/* Common routes  */}
                 <Route path="/" element={<LandingView />} />
                 <Route path="/wallet" element={<WalletView />} />
                 <Route path="/pinning" element={<SetupIpfsView />} />
                 <Route path="/:network/publications" element={<PublicationsView updateChainId={updateChainId} />} />
 
-                {/* if there is no network (network is now optional), the publicationId must be an ENS */}
-                <Route path="/:network?/:publicationId" element={<PublicationView updateChainId={updateChainId} />}>
-                  <Route path=":postId/:type" element={<CreateArticleView />} />
-                  <Route path=":postId/preview/:type" element={<CreateArticleView2 />} />
-                  <Route path=":articleId" element={<ArticleView updateChainId={updateChainId} />} />
-                  <Route path="permissions/:type" element={<PermissionView />} />
+                {/* Raw routes  */}
+                <Route path="/:network/publications">
+                  <Route path=":publicationId" element={<PublicationView updateChainId={updateChainId} />} />
+                  <Route path=":publicationId">
+                    <Route path="permissions/:type" element={<PermissionView />} />
+
+                    <Route path="new" element={<CreateArticleView type="new" />} />
+                    <Route path="new2" element={<CreateArticleView2 type="new" />} />
+
+                    <Route path=":articleId" element={<ArticleView updateChainId={updateChainId} />} />
+
+                    <Route path=":articleId/edit" element={<CreateArticleView type="edit" />} />
+                    <Route path=":articleId/edit2" element={<CreateArticleView2 type="edit" />} />
+                  </Route>
+                </Route>
+
+                {/* ENS routes (should look nice) */}
+                <Route path="/:publicationEns" element={<PublicationView updateChainId={updateChainId} />}>
+                  <Route path=":articleId" element={<PublicationView updateChainId={updateChainId} />} />
                 </Route>
               </Routes>
             </PosterProvider>

@@ -146,7 +146,7 @@ const ArticleItem: React.FC<ArticleItemProps> = ({ article, couldUpdate, couldDe
                 <ArticleItemEditButton
                   onClick={(e) => {
                     e.stopPropagation()
-                    navigate(`../${publicationId}/${id}/edit`)
+                    navigate(`./${id}/edit`)
                     saveArticle(article)
                   }}
                   variant="contained"
