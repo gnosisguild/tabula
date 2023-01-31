@@ -112,7 +112,7 @@ export const WalletView: React.FC = () => {
         </Box>
         <Grid container style={{ gap: 16 }}>
           {SUPPORTED_WALLETS.map(({ name, iconURL, connector }, index) => {
-            if (name === "Metamask" && !window.ethereum) {
+            if (name === "Metamask" && !(window as any).ethereum) {
               return null
             }
             return (
