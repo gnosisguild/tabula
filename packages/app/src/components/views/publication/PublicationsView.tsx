@@ -178,8 +178,6 @@ export const PublicationsView: React.FC<PublicationsViewProps> = ({ updateChainI
       <Helmet>
         <title>Tabula</title>
 
-        <meta property="og:title" content="tabula" />
-
         <meta property="og:title" content="Tabula" />
         <meta property="og:site_name" content="Tabula" />
         <meta
