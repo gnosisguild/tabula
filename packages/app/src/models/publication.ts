@@ -18,7 +18,7 @@ export interface PermissionAction {
   "publication/permissions": boolean
 }
 
-export interface Publications {
+export interface Publication {
   id: string
   hash: string
   description?: string | null
@@ -30,12 +30,6 @@ export interface Publications {
   lastUpdated?: string
 }
 
-export interface Post {
-  id: string
-  image?: string | null
-  tags?: string[] | null
-  title: string
-}
 export interface Article {
   title: string
   article: string

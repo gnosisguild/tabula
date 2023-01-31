@@ -5,7 +5,7 @@ import { useQuery } from "urql"
 import { chainNameToChainId } from "../../../constants/chain"
 import { useIpfs } from "../../../hooks/useIpfs"
 import { useNotification } from "../../../hooks/useNotification"
-import { Permission, Publications } from "../../../models/publication"
+import { Permission, Publication } from "../../../models/publication"
 import { usePosterContext } from "../../poster/context"
 import { usePublicationContext } from "../contexts"
 import { GET_PUBLICATION_QUERY } from "../queries"
@@ -17,10 +17,10 @@ const usePublication = (id: string) => {
   const { transactionUrl } = usePosterContext()
   const { publication, permission, savePublication } = usePublicationContext()
   const [showToast, setShowToast] = useState<boolean>(true)
-  const [data, setData] = useState<Publications | undefined>(undefined)
+  const [data, setData] = useState<Publication>()
   const [indexing, setIndexing] = useState<boolean>(false)
   const [executePollInterval, setExecutePollInterval] = useState<boolean>(false)
-  const [currentTimestamp, setCurrentTimestamp] = useState<number | undefined>(undefined)
+  const [currentTimestamp, setCurrentTimestamp] = useState<number>()
   const [transactionCompleted, setTransactionCompleted] = useState<boolean>(false)
   const [currentUserPermission, setCurrentUserPermission] = useState<Permission[]>([])
   const [accountPermission, setAccountPermission] = useState<string>()

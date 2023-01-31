@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useIpfs } from "../../../hooks/useIpfs"
-import { Article, Permission, Publications } from "../../../models/publication"
+import { Article, Permission, Publication } from "../../../models/publication"
 import { createGenericContext } from "../../../utils/create-generic-context"
 
 import { PublicationContextType, PublicationProviderProps } from "./publication.types"
@@ -10,8 +10,8 @@ const [usePublicationContext, PublicationContextProvider] = createGenericContext
 const PublicationProvider = ({ children }: PublicationProviderProps) => {
   const [publicationAvatar, setPublicationAvatar] = useState<string>()
   const [currentPath, setCurrentPath] = useState<string>()
-  const [publications, setPublications] = useState<Publications[]>()
-  const [publication, setPublication] = useState<Publications>()
+  const [publications, setPublications] = useState<Publication[]>()
+  const [publication, setPublication] = useState<Publication>()
   const [draftArticle, setDraftArticle] = useState<Article>()
   const [article, setArticle] = useState<Article>()
   const [permission, setPermission] = useState<Permission>()
@@ -29,8 +29,8 @@ const PublicationProvider = ({ children }: PublicationProviderProps) => {
     }
     setLoading(false)
   }
-  const savePublication = (publication?: Publications) => setPublication(publication)
-  const savePublications = (publications?: Publications[]) => setPublications(publications)
+  const savePublication = (publication?: Publication) => setPublication(publication)
+  const savePublications = (publications?: Publication[]) => setPublications(publications)
   const saveDraftArticle = (article?: Article) => setDraftArticle(article)
   const saveArticle = (article?: Article) => setArticle(article)
   const savePermission = (permission: Permission) => setPermission(permission)

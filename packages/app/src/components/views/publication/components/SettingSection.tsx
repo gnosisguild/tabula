@@ -36,7 +36,7 @@ export const SettingSection: React.FC<SettingsSectionProps> = ({ couldDelete, co
   const [loading, setLoading] = useState<boolean>(false)
   const [deleteLoading, setDeleteLoading] = useState<boolean>(false)
   const { publication, saveIsEditing, saveDraftPublicationImage, draftPublicationImage } = usePublicationContext()
-  const { executePublication, deletePublication } = usePoster()
+  const { updatePublication, deletePublication } = usePoster()
   const {
     indexing: updateIndexing,
     setCurrentTimestamp,
@@ -99,9 +99,8 @@ export const SettingSection: React.FC<SettingsSectionProps> = ({ couldDelete, co
       image = { path: publication.image }
     }
     if (title && publication && publication.id) {
-      await executePublication({
+      await updatePublication({
         id: publication.id,
-        action: "publication/update",
         title,
         description,
         tags,
@@ -123,7 +122,6 @@ export const SettingSection: React.FC<SettingsSectionProps> = ({ couldDelete, co
     if (publication && publication.id) {
       setDeletedPublicationId(publication.id)
       await deletePublication({
-        action: "publication/delete",
         id: publication.id,
       }).then((res) => {
         if (res && res.error) {

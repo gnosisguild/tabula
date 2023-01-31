@@ -9,7 +9,7 @@ import usePoster from "../../../services/poster/hooks/usePoster"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { useForm, Controller } from "react-hook-form"
 import * as yup from "yup"
-import { Publications } from "../../../models/publication"
+import { Publication } from "../../../models/publication"
 import { useWeb3React } from "@web3-react/core"
 import { useNavigate } from "react-router-dom"
 import { accessPublications } from "../../../utils/permission"
@@ -76,7 +76,7 @@ interface PublicationsViewProps {
 export const PublicationsView: React.FC<PublicationsViewProps> = ({ updateChainId }) => {
   const navigate = useNavigate()
   const { account, chainId } = useWeb3React()
-  const { executePublication } = usePoster()
+  const { createPublication: executePublication } = usePoster()
   const { setLastPathWithChainName } = usePosterContext()
   useDynamicFavIcon(undefined)
   const [loading, setLoading] = useState<boolean>(false)
@@ -90,7 +90,7 @@ export const PublicationsView: React.FC<PublicationsViewProps> = ({ updateChainI
     setExecutePollInterval,
   } = usePublications()
   const [tags, setTags] = useState<string[]>([])
-  const [publicationsToShow, setPublicationsToShow] = useState<Publications[]>([])
+  const [publicationsToShow, setPublicationsToShow] = useState<Publication[]>([])
   const [publicationImg, setPublicationImg] = useState<File>()
   const ipfs = useIpfs()
   const {
@@ -136,7 +136,7 @@ export const PublicationsView: React.FC<PublicationsViewProps> = ({ updateChainI
     handlePublication(data)
   }
 
-  const handlePublicationsToShow = (publications: Publications[], address: string) => {
+  const handlePublicationsToShow = (publications: Publication[], address: string) => {
     const show = accessPublications(publications, address)
     setPublicationsToShow(show)
   }
@@ -150,7 +150,6 @@ export const PublicationsView: React.FC<PublicationsViewProps> = ({ updateChainI
     }
     if (title) {
       await executePublication({
-        action: "publication/create",
         title,
         description,
         tags,

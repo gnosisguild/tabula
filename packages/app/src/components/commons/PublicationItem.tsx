@@ -3,7 +3,7 @@ import { Avatar, Chip, Grid, Typography } from "@mui/material"
 import { styled } from "@mui/styles"
 import { palette, typography } from "../../theme"
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos"
-import { Publications } from "../../models/publication"
+import { Publication } from "../../models/publication"
 import DeterministicAvatar from "./DeterministicAvatar"
 import usePublication from "../../services/publications/hooks/usePublication"
 
@@ -26,7 +26,7 @@ const PublicationIconGrid = styled(Grid)({
 })
 
 type PublicationItemProps = {
-  publication: Publications
+  publication: Publication
   onClick: () => void
 }
 

@@ -1,4 +1,3 @@
-import { TransactionReceipt } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
 import { useState } from "react"
 import { useParams } from "react-router-dom"
@@ -9,12 +8,15 @@ import { checkIsValidChain } from "../../../utils/validation"
 import { usePosterContext } from "../context"
 import { getContract } from "../contracts/contract"
 import {
-  PosterArticle,
+  ArticleAction,
+  PosterCreateArticle,
+  PosterCreatePublication,
   PosterDeleteArticle,
   PosterDeletePublication,
   PosterPermission,
   PosterUpdateArticle,
-  Publication,
+  PosterUpdatePublication,
+  PublicationAction,
 } from "../type"
 import { chainParameters, SupportedChainId } from "../../../constants/chain"
 
@@ -53,114 +55,120 @@ const usePoster = () => {
     })
   }
 
-  const executePublication = async (fields: Publication): Promise<any> => {
-    const content: Publication = {
-      action: fields.action,
-      title: fields.title,
-    }
-    if (fields.id) {
-      content.id = fields.id
-    }
-    if (fields.description) {
-      content.description = fields.description
-    }
-    if (fields.tags?.length) {
-      content.tags = fields.tags
-    }
-    if (fields.image) {
-      content.image = fields.image
-    }
+  const execute = async (content: any, action: PublicationAction | ArticleAction) => {
     if (isValidChain) {
       if (signer) {
-        setLoading(true)
-        const poster = contract.connect(signer)
         try {
-          const tx = await poster.post(JSON.stringify(content), PUBLICATION_TAG)
-          const receipt: TransactionReceipt = await tx.wait()
-          content.image && (await pinAction(content.image, `${content.title}-image`))
-
-          setTransactionUrl(`${URL}tx/${receipt.transactionHash}`)
-          setLoading(false)
+          const poster = contract.connect(signer)
+          const tx = await poster.post(JSON.stringify({ ...content, action }), PUBLICATION_TAG)
+          return await tx.wait()
         } catch (error: any) {
-          setLoading(false)
           showTransactionError()
-          return { error: true, message: error.message }
+          throw error
         }
       }
     } else {
       showChainError()
-      return { error: true }
+      throw new Error("Invalid chain")
     }
   }
 
-  const deletePublication = async (publication: PosterDeletePublication): Promise<any> => {
-    if (isValidChain) {
-      if (signer) {
-        setLoading(true)
-        const poster = contract.connect(signer)
-        try {
-          const tx = await poster.post(JSON.stringify(publication), PUBLICATION_TAG)
-          const receipt: TransactionReceipt = await tx.wait()
-          setTransactionUrl(`${URL}tx/${receipt.transactionHash}`)
-
-          setLoading(false)
-        } catch (error: any) {
-          setLoading(false)
-          showTransactionError()
-          return { error: true, message: error.message }
-        }
-      }
-    } else {
-      showChainError()
-      return { error: true }
+  const createPublication = async (newPublication: PosterCreatePublication): Promise<any> => {
+    const content: any = {
+      title: newPublication.title,
+    }
+    if (newPublication.description) {
+      content.description = newPublication.description
+    }
+    if (newPublication.tags?.length) {
+      content.tags = newPublication.tags
+    }
+    if (newPublication.image) {
+      content.image = newPublication.image
+    }
+    try {
+      setLoading(true)
+      const receipt = await execute(content, PublicationAction.CREATE)
+      content.image && (await pinAction(content.image, `${content.title}-image`))
+      setTransactionUrl(`${URL}tx/${receipt.transactionHash}`)
+      setLoading(false)
+    } catch (error: any) {
+      setLoading(false)
+      return { error: true, message: error.message }
     }
   }
 
-  const createArticle = async (fields: PosterArticle, pin: boolean): Promise<any> => {
-    const content: PosterArticle = {
-      action: fields.action,
-      title: fields.title,
-      article: fields.article,
-      publicationId: fields.publicationId,
+  const updatePublication = async (publicationUpdates: PosterUpdatePublication): Promise<any> => {
+    const content: any = {
+      title: publicationUpdates.title,
     }
-    if (fields.description) {
-      content.description = fields.description
+    if (publicationUpdates.description) {
+      content.description = publicationUpdates.description
     }
-    if (fields.tags?.length) {
-      content.tags = fields.tags
+    if (publicationUpdates.tags?.length) {
+      content.tags = publicationUpdates.tags
     }
-    if (fields.image) {
-      content.image = fields.image
+    if (publicationUpdates.image) {
+      content.image = publicationUpdates.image
     }
-    if (fields.authors) {
-      content.authors = fields.authors
-    }
-    if (isValidChain) {
-      if (signer) {
-        setLoading(true)
-        const poster = contract.connect(signer)
-        try {
-          const tx = await poster.post(JSON.stringify(content), PUBLICATION_TAG)
-          const receipt: TransactionReceipt = await tx.wait()
-          setLoading(false)
-          content.image && (await pinAction(content.image, `${content.title}-image`, "Successfully image pinned"))
-          pin && (await pinAction(content.article, `Article-${content.title}`, "Successfully article pinned"))
-          setTransactionUrl(`${URL}tx/${receipt.transactionHash}`)
-        } catch (error: any) {
-          setLoading(false)
-          showTransactionError()
-          return { error: true, message: error.message }
-        }
-      }
-    } else {
-      showChainError()
-      return { error: true }
+    try {
+      setLoading(true)
+      const receipt = await execute(content, PublicationAction.UPDATE)
+      content.image && (await pinAction(content.image, `${content.title}-image`))
+      setTransactionUrl(`${URL}tx/${receipt.transactionHash}`)
+      setLoading(false)
+    } catch (error: any) {
+      setLoading(false)
+      showTransactionError()
+      return { error: true, message: error.message }
     }
   }
 
+  const deletePublication = async (publicationToDelete: PosterDeletePublication): Promise<any> => {
+    const content = publicationToDelete
+    try {
+      setLoading(true)
+      const receipt = await execute(content, PublicationAction.DELETE)
+      setTransactionUrl(`${URL}tx/${receipt.transactionHash}`)
+      setLoading(false)
+    } catch (error: any) {
+      setLoading(false)
+      return { error: true, message: error.message }
+    }
+  }
+
+  const createArticle = async (articleToCreate: PosterCreateArticle, pin: boolean): Promise<any> => {
+    const content: PosterCreateArticle = {
+      title: articleToCreate.title,
+      article: articleToCreate.article,
+      publicationId: articleToCreate.publicationId,
+    }
+    if (articleToCreate.description) {
+      content.description = articleToCreate.description
+    }
+    if (articleToCreate.tags?.length) {
+      content.tags = articleToCreate.tags
+    }
+    if (articleToCreate.image) {
+      content.image = articleToCreate.image
+    }
+    if (articleToCreate.authors) {
+      content.authors = articleToCreate.authors
+    }
+    try {
+      setLoading(true)
+      const receipt = await execute(content, ArticleAction.CREATE)
+      content.image && (await pinAction(content.image, `${content.title}-image`, "Successfully image pinned"))
+      pin && (await pinAction(content.article, `Article-${content.title}`, "Successfully article pinned"))
+      setTransactionUrl(`${URL}tx/${receipt.transactionHash}`)
+      setLoading(false)
+    } catch (error: any) {
+      setLoading(false)
+      return { error: true, message: error.message }
+    }
+  }
   const updateArticle = async (fields: PosterUpdateArticle, pin: boolean): Promise<any> => {
     const content: PosterUpdateArticle = {
-      action: fields.action,
       title: fields.title,
       article: fields.article,
       id: fields.id,
@@ -177,83 +185,59 @@ const usePoster = () => {
     if (fields.authors) {
       content.authors = fields.authors
     }
-    if (isValidChain) {
-      if (signer) {
-        setLoading(true)
-        const poster = contract.connect(signer)
-        try {
-          const tx = await poster.post(JSON.stringify(content), PUBLICATION_TAG)
-          const receipt: TransactionReceipt = await tx.wait()
-          setLoading(false)
-          content.image &&
-            (await pinAction(
-              content.image,
-              `Image-${content.title}-${content.lastUpdated}`,
-              "Successfully image pinned",
-            ))
-          pin &&
-            (await pinAction(
-              content.article,
-              `Article-${content.title}-${content.lastUpdated}`,
-              "Successfully pinned article",
-            ))
-          setTransactionUrl(`${URL}tx/${receipt.transactionHash}`)
-        } catch (error: any) {
-          setLoading(false)
-          showTransactionError()
-          return { error: true, message: error.message }
-        }
-      }
-    } else {
-      showChainError()
-      return { error: true }
+    try {
+      setLoading(true)
+      const receipt = await execute(content, ArticleAction.UPDATE)
+      content.image &&
+        (await pinAction(content.image, `Image-${content.title}-${content.lastUpdated}`, "Successfully image pinned"))
+      pin &&
+        (await pinAction(
+          content.article,
+          `Article-${content.title}-${content.lastUpdated}`,
+          "Successfully pinned article",
+        ))
+      setTransactionUrl(`${URL}tx/${receipt.transactionHash}`)
+      setLoading(false)
+    } catch (error: any) {
+      setLoading(false)
+      return { error: true, message: error.message }
     }
   }
 
   const deleteArticle = async (content: PosterDeleteArticle): Promise<any> => {
-    if (isValidChain) {
-      if (signer) {
-        setLoading(true)
-        const poster = contract.connect(signer)
-        try {
-          const tx = await poster.post(JSON.stringify(content), PUBLICATION_TAG)
-          const receipt: TransactionReceipt = await tx.wait()
-          setLoading(false)
-          setTransactionUrl(`${URL}tx/${receipt.transactionHash}`)
-        } catch (error: any) {
-          setLoading(false)
-          showTransactionError()
-          return { error: true, message: error.message }
-        }
-      }
-    } else {
-      showChainError()
-      return { error: true }
+    try {
+      setLoading(true)
+      const receipt = await execute(content, ArticleAction.DELETE)
+      setTransactionUrl(`${URL}tx/${receipt.transactionHash}`)
+      setLoading(false)
+    } catch (error: any) {
+      setLoading(false)
+      return { error: true, message: error.message }
     }
   }
 
   const givePermission = async (fields: PosterPermission): Promise<any> => {
-    if (isValidChain) {
-      if (signer) {
-        setLoading(true)
-        const poster = contract.connect(signer)
-        try {
-          const tx = await poster.post(JSON.stringify(fields), PUBLICATION_TAG)
-          const receipt: TransactionReceipt = await tx.wait()
-          setLoading(false)
-          setTransactionUrl(`${URL}tx/${receipt.transactionHash}`)
-        } catch (error: any) {
-          setLoading(false)
-          showTransactionError()
-          return { error: true, message: error.message }
-        }
-      }
-    } else {
-      showChainError()
-      return { error: true }
+    const content = fields
+    try {
+      setLoading(true)
+      const receipt = await execute(content, PublicationAction.PERMISSIONS)
+      setTransactionUrl(`${URL}tx/${receipt.transactionHash}`)
+      setLoading(false)
+    } catch (error: any) {
+      setLoading(false)
+      return { error: true, message: error.message }
     }
   }
 
-  return { executePublication, deletePublication, createArticle, deleteArticle, givePermission, updateArticle, loading }
+  return {
+    createPublication,
+    updatePublication,
+    deletePublication,
+    createArticle,
+    deleteArticle,
+    givePermission,
+    updateArticle,
+    loading,
+  }
 }
 export default usePoster

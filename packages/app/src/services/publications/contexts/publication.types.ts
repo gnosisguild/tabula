@@ -1,9 +1,9 @@
 import { ReactNode } from "react"
-import { Article, Permission, Publications } from "../../../models/publication"
+import { Article, Permission, Publication } from "../../../models/publication"
 
 export type PublicationContextType = {
-  publication?: Publications
-  publications?: Publications[]
+  publication?: Publication
+  publications?: Publication[]
   draftArticle?: Article
   article?: Article
   permission?: Permission
@@ -21,8 +21,8 @@ export type PublicationContextType = {
   setCurrentPath: (path?: string) => void
   savePermission: (permission: Permission) => void
   saveDraftArticle: (article?: Article) => void
-  savePublication: (publication?: Publications) => void
-  savePublications: (publications?: Publications[]) => void
+  savePublication: (publication?: Publication) => void
+  savePublications: (publications?: Publication[]) => void
   saveArticle: (article?: Article) => void
 }
 

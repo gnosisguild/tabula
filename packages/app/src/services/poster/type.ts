@@ -1,34 +1,39 @@
-import { Article, PermissionAction, Publications } from "../../models/publication"
+import { Article, PermissionAction, Publication } from "../../models/publication"
 
-type ArticleAction = "article/create" | "article/update" | "article/delete" | "article/permissions"
-export interface Publication extends Omit<Publications, "id" | "hash"> {
-  action: "publication/create" | "publication/update" | "publication/delete" | "publication/permissions"
-  id?: string
+export enum ArticleAction {
+  CREATE = "article/create",
+  UPDATE = "article/update",
+  DELETE = "article/delete",
+}
+export enum PublicationAction {
+  CREATE = "publication/create",
+  UPDATE = "publication/update",
+  DELETE = "publication/delete",
+  PERMISSIONS = "publication/permissions",
 }
 
-export interface PosterArticle extends Article {
-  action: ArticleAction
+export interface PosterCreatePublication extends Omit<Publication, "id" | "hash" | "action"> {}
+
+export interface PosterUpdatePublication extends Omit<Publication, "hash" | "action"> {}
+
+export interface PosterCreateArticle extends Article {
   publicationId: string
   authors?: string[]
 }
 export interface PosterUpdateArticle extends Article {
-  action: ArticleAction
   id: string
   authors?: string[]
 }
 
 export interface PosterDeleteArticle {
-  action: ArticleAction
   id: string
 }
 
 export interface PosterDeletePublication {
-  action: "publication/delete"
   id: string
 }
 
 export interface PosterPermission {
-  action: "publication/permissions"
   id: string
   account: string
   permissions: PermissionAction

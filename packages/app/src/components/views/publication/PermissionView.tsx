@@ -194,7 +194,6 @@ export const PermissionView: React.FC = () => {
         setLoading(true)
       }
       await givePermission({
-        action: "publication/permissions",
         id: publication.id,
         account: type === "new" ? data.account : permission?.address || "",
         permissions: {

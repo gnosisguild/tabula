@@ -82,7 +82,6 @@ export const CreateArticleView2: React.FC = () => {
         if (type === "new") {
           await createArticle(
             {
-              action: "article/create",
               publicationId: id,
               title,
               article: hashArticle ? hashArticle.path : draftArticleText,
@@ -103,7 +102,6 @@ export const CreateArticleView2: React.FC = () => {
         if (type === "edit" && havePermissionToUpdate && article?.id) {
           await updateArticle(
             {
-              action: "article/update",
               id: article.id,
               title,
               article: hashArticle ? hashArticle.path : draftArticleText,

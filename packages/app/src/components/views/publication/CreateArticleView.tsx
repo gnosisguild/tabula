@@ -100,7 +100,6 @@ export const CreateArticleView: React.FC = () => {
       setLoading(true)
       setCurrentArticleId(article.id)
       await deleteArticle({
-        action: "article/delete",
         id: article.id,
       }).then((res) => {
         if (res && res.error) {

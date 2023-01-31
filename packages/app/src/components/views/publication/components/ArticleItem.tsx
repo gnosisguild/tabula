@@ -72,7 +72,6 @@ const ArticleItem: React.FC<ArticleItemProps> = ({ article, couldUpdate, couldDe
     if (article && article.id && couldDelete) {
       setLoading(true)
       await deleteArticle({
-        action: "article/delete",
         id: article.id,
       }).then((res) => {
         setCurrentArticleId(article.id)

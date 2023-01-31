@@ -1,14 +1,14 @@
 import React from "react"
 import { Box } from "@mui/material"
 import PublicationHeader from "./PublicationHeader"
-import { Publications } from "../../models/publication"
+import { Publication } from "../../models/publication"
 import { Helmet } from "react-helmet"
 import { useDynamicFavIcon } from "../../hooks/useDynamicFavIco"
 import { usePublicationContext } from "../../services/publications/contexts"
 import usePublication from "../../services/publications/hooks/usePublication"
 
 type Props = {
-  publication?: Publications
+  publication?: Publication
   showCreatePost?: boolean
   children: React.ReactNode
 }

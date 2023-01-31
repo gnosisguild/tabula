@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { Avatar, Button, Container, Grid, styled, Typography } from "@mui/material"
 import { useWeb3React } from "@web3-react/core"
 import { WalletBadge } from "../commons/WalletBadge"
-import { Publications } from "../../models/publication"
+import { Publication } from "../../models/publication"
 import AddIcon from "@mui/icons-material/Add"
 import theme, { palette, typography } from "../../theme"
 import { useLocation, useNavigate } from "react-router-dom"
@@ -13,7 +13,7 @@ import { UserOptions } from "../commons/UserOptions"
 import DeterministicAvatar from "../commons/DeterministicAvatar"
 
 type Props = {
-  publication?: Publications
+  publication?: Publication
   showCreatePost?: boolean
 }
 
