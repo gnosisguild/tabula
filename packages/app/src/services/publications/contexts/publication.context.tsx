@@ -8,16 +8,16 @@ import { PublicationContextType, PublicationProviderProps } from "./publication.
 const [usePublicationContext, PublicationContextProvider] = createGenericContext<PublicationContextType>()
 
 const PublicationProvider = ({ children }: PublicationProviderProps) => {
-  const [publicationAvatar, setPublicationAvatar] = useState<string | undefined>(undefined)
-  const [currentPath, setCurrentPath] = useState<string | undefined>(undefined)
-  const [publications, setPublications] = useState<Publications[] | undefined>(undefined)
-  const [publication, setPublication] = useState<Publications | undefined>(undefined)
-  const [draftArticle, setDraftArticle] = useState<Article | undefined>(undefined)
-  const [article, setArticle] = useState<Article | undefined>(undefined)
-  const [permission, setPermission] = useState<Permission | undefined>(undefined)
+  const [publicationAvatar, setPublicationAvatar] = useState<string>()
+  const [currentPath, setCurrentPath] = useState<string>()
+  const [publications, setPublications] = useState<Publications[]>()
+  const [publication, setPublication] = useState<Publications>()
+  const [draftArticle, setDraftArticle] = useState<Article>()
+  const [article, setArticle] = useState<Article>()
+  const [permission, setPermission] = useState<Permission>()
   const [editingPublication, setEditingPublication] = useState<boolean>(false)
-  const [draftPublicationImage, setDraftPublicationImage] = useState<File | undefined>(undefined)
-  const [markdownArticle, setMarkdownArticle] = useState<string | undefined>(undefined)
+  const [draftPublicationImage, setDraftPublicationImage] = useState<File>()
+  const [markdownArticle, setMarkdownArticle] = useState<string>()
   const [loading, setLoading] = useState<boolean>(false)
   const ipfs = useIpfs()
 
@@ -29,13 +29,13 @@ const PublicationProvider = ({ children }: PublicationProviderProps) => {
     }
     setLoading(false)
   }
-  const savePublication = (publication: Publications | undefined) => setPublication(publication)
-  const savePublications = (publications: Publications[] | undefined) => setPublications(publications)
-  const saveDraftArticle = (article: Article | undefined) => setDraftArticle(article)
-  const saveArticle = (article: Article | undefined) => setArticle(article)
+  const savePublication = (publication?: Publications) => setPublication(publication)
+  const savePublications = (publications?: Publications[]) => setPublications(publications)
+  const saveDraftArticle = (article?: Article) => setDraftArticle(article)
+  const saveArticle = (article?: Article) => setArticle(article)
   const savePermission = (permission: Permission) => setPermission(permission)
   const saveIsEditing = (isEditing: boolean) => setEditingPublication(isEditing)
-  const saveDraftPublicationImage = (file: File | undefined) => setDraftPublicationImage(file)
+  const saveDraftPublicationImage = (file?: File) => setDraftPublicationImage(file)
 
   return (
     <PublicationContextProvider

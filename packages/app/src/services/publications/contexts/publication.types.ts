@@ -2,28 +2,28 @@ import { ReactNode } from "react"
 import { Article, Permission, Publications } from "../../../models/publication"
 
 export type PublicationContextType = {
-  publication: Publications | undefined
-  publications: Publications[] | undefined
-  draftArticle: Article | undefined
-  article: Article | undefined
-  permission: Permission | undefined
+  publication?: Publications
+  publications?: Publications[]
+  draftArticle?: Article
+  article?: Article
+  permission?: Permission
   editingPublication: boolean
-  draftPublicationImage: File | undefined
-  currentPath: string | undefined
-  markdownArticle: string | undefined
+  draftPublicationImage?: File
+  currentPath?: string
+  markdownArticle?: string
   loading: boolean
-  publicationAvatar: string | undefined
-  setPublicationAvatar: (image: string | undefined) => void
+  publicationAvatar?: string
+  setPublicationAvatar: (image?: string) => void
   getIpfsData: (hash: string) => void
-  setMarkdownArticle: (markdown: string | undefined) => void
+  setMarkdownArticle: (markdown?: string) => void
   saveIsEditing: (isEditing: boolean) => void
-  saveDraftPublicationImage: (file: File | undefined) => void
-  setCurrentPath: (path: string | undefined) => void
+  saveDraftPublicationImage: (file?: File) => void
+  setCurrentPath: (path?: string) => void
   savePermission: (permission: Permission) => void
-  saveDraftArticle: (article: Article | undefined) => void
-  savePublication: (publication: Publications | undefined) => void
-  savePublications: (publications: Publications[] | undefined) => void
-  saveArticle: (article: Article | undefined) => void
+  saveDraftArticle: (article?: Article) => void
+  savePublication: (publication?: Publications) => void
+  savePublications: (publications?: Publications[]) => void
+  saveArticle: (article?: Article) => void
 }
 
 export type PublicationProviderProps = {
