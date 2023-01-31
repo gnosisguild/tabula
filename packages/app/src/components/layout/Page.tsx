@@ -2,14 +2,14 @@ import Header from "./Header"
 import { Box } from "@mui/material"
 import { useLocation } from "react-router-dom"
 import theme, { palette } from "../../theme"
+import { PropsWithChildren } from "react"
 
 type Props = {
   title?: string
   showBadge?: boolean
-  children: React.ReactNode
 }
 
-const Page: React.FC<Props> = ({ children, showBadge }) => {
+const Page: React.FC<PropsWithChildren<Props>> = ({ children, showBadge }) => {
   const location = useLocation()
 
   return (

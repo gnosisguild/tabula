@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 
-export const useDynamicFavIcon = (imageSrc: string | null | undefined) => {
+export const useDynamicFavIcon = (imageSrc?: string) => {
   const defaultFavIcon = process.env.PUBLIC_URL + "/favicon.ico"
   useEffect(() => {
     let link = document.querySelector("link[rel~='icon']") as any

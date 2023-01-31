@@ -1,4 +1,4 @@
-import React from "react"
+import React, { PropsWithChildren } from "react"
 import { Box } from "@mui/material"
 import PublicationHeader from "./PublicationHeader"
 import { Publication } from "../../models/publication"
@@ -10,10 +10,9 @@ import usePublication from "../../services/publications/hooks/usePublication"
 type Props = {
   publication?: Publication
   showCreatePost?: boolean
-  children: React.ReactNode
 }
 
-const PublicationPage: React.FC<Props> = ({ children, publication, showCreatePost }) => {
+const PublicationPage: React.FC<PropsWithChildren<Props>> = ({ children, publication, showCreatePost }) => {
   const { publicationAvatar } = usePublicationContext()
   const { imageSrc } = usePublication(publication?.id || "")
   useDynamicFavIcon(imageSrc ? imageSrc : publicationAvatar)

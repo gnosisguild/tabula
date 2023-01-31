@@ -24,7 +24,7 @@ const PublicationAvatar: React.FC<PublicationAvatarProps> = ({ skipIPFSValidatio
   const inputFile = useRef<HTMLInputElement | null>(null)
   const openImagePicker = () => inputFile && inputFile.current?.click()
   const [removeImage, setRemoveImage] = useState<boolean>(false)
-  const [uri, setUri] = useState<string | undefined>(undefined)
+  const [uri, setUri] = useState<string>()
   const [defaultImageSrc, setDefaultImageSrc] = useState<string>("")
   const ipfs = useIpfs()
 
