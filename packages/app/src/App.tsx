@@ -18,8 +18,6 @@ import SetupIpfsView from "./components/views/pinning/SetupIpfsView"
 import { useWeb3React } from "@web3-react/core"
 import { PosterProvider } from "./services/poster/context"
 import { WalletProvider } from "./connectors/WalletProvider"
-import DeterministicAvatar from "./components/commons/DeterministicAvatar"
-import { Box } from "@mui/material"
 
 const App: React.FC = () => {
   // the chainId should be from the publication if its present
@@ -33,12 +31,6 @@ const App: React.FC = () => {
       setChainId(newChainId)
     }
   }
-
-  // Temporary state for debugging avatar
-  const [vMin, setVMin] = useState(160)
-  useEffect(() => {
-    setVMin(window.innerHeight < window.innerWidth ? window.innerHeight : window.innerWidth)
-  }, [])
 
   useEffect(() => {
     setCurrentSubgraphClient(subgraphClient(chainId))
@@ -59,15 +51,6 @@ const App: React.FC = () => {
                 <Route path="/" element={<LandingView />} />
                 <Route path="/wallet" element={<WalletView />} />
                 <Route path="/:network">
-                  {/* Temporary page for debugging */}
-                  <Route
-                    path="generative"
-                    element={
-                      <Box sx={{ width: "100%", "& div": { margin: "0 auto" } }}>
-                        <DeterministicAvatar width={vMin} height={vMin} />
-                      </Box>
-                    }
-                  />
                   <Route path="pinning" element={<SetupIpfsView />} />
                   <Route path="publications" element={<PublicationsView updateChainId={updateChainId} />} />
                   <Route path=":publicationId" element={<PublicationView updateChainId={updateChainId} />} />
