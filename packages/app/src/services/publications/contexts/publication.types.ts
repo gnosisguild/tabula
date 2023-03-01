@@ -1,3 +1,4 @@
+import { ethers } from "ethers"
 import { ReactNode } from "react"
 import { Article, Permission, Publication } from "../../../models/publication"
 
@@ -15,7 +16,8 @@ export type PublicationContextType = {
   publicationAvatar?: string
   setPublicationAvatar: (image?: string) => void
   getIpfsData: (hash: string) => void
-  setMarkdownArticle: (markdown?: string) => void
+  getPublicationId: (publicationSlug: string, provider?: ethers.providers.BaseProvider) => Promise<string | undefined>
+  setMarkdownArticle: (markdown: string | undefined) => void
   saveIsEditing: (isEditing: boolean) => void
   saveDraftPublicationImage: (file?: File) => void
   setCurrentPath: (path?: string) => void

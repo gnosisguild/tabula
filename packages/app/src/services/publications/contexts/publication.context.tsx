@@ -1,7 +1,9 @@
+import { ethers } from "ethers"
 import { useState } from "react"
 import { useIpfs } from "../../../hooks/useIpfs"
 import { Article, Permission, Publication } from "../../../models/publication"
 import { createGenericContext } from "../../../utils/create-generic-context"
+import { getTextRecordContent } from "../../ens"
 
 import { PublicationContextType, PublicationProviderProps } from "./publication.types"
 
@@ -20,6 +22,30 @@ const PublicationProvider = ({ children }: PublicationProviderProps) => {
   const [markdownArticle, setMarkdownArticle] = useState<string>()
   const [loading, setLoading] = useState<boolean>(false)
   const ipfs = useIpfs()
+  const [slugToPublicationId, setSlugToPublicationId] = useState<{ [key: string]: string }>({})
+
+  const getPublicationId = async (publicationSlug: string, provider?: ethers.providers.BaseProvider) => {
+    if (slugToPublicationId[publicationSlug]) {
+      return slugToPublicationId[publicationSlug]
+    } else {
+      if (publicationSlug.endsWith(".eth")) {
+        const publicationId = await getTextRecordContent(publicationSlug, "tabula", provider)
+        if (publicationId) {
+          setSlugToPublicationId((prev) => {
+            prev[publicationSlug] = publicationId
+            return prev
+          })
+          return publicationId
+        }
+      } else {
+        setSlugToPublicationId((prev) => {
+          prev[publicationSlug] = publicationSlug
+          return prev
+        })
+        return publicationSlug
+      }
+    }
+  }
 
   const getIpfsData = async (hash: string) => {
     setLoading(true)
@@ -54,6 +80,7 @@ const PublicationProvider = ({ children }: PublicationProviderProps) => {
         setPublicationAvatar,
         setMarkdownArticle,
         getIpfsData,
+        getPublicationId,
         setCurrentPath,
         saveIsEditing,
         saveDraftPublicationImage,

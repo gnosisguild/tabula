@@ -6,6 +6,7 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos"
 import { Publication } from "../../models/publication"
 import DeterministicAvatar from "./DeterministicAvatar"
 import usePublication from "../../services/publications/hooks/usePublication"
+import { useParams } from "react-router-dom"
 
 const PublicationItemContainer = styled(Grid)({
   minHeight: 105,
@@ -31,8 +32,9 @@ type PublicationItemProps = {
 }
 
 const PublicationItem: React.FC<PublicationItemProps> = ({ publication, onClick }) => {
+  const { publicationSlug } = useParams<{ publicationSlug: string }>()
   const { title, tags } = publication
-  const { imageSrc } = usePublication(publication.id || "")
+  const { imageSrc } = usePublication(publicationSlug || "")
 
   return title ? (
     <PublicationItemContainer container alignItems={"center"} onClick={onClick}>

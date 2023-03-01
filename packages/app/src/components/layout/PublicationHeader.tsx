@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from "react"
-import { Avatar, Button, Container, Grid, styled, Typography } from "@mui/material"
+import React, { useEffect, useRef, useState } from "react"
+import { Avatar, Box, Button, Container, Grid, styled, Typography } from "@mui/material"
 import { useWeb3React } from "@web3-react/core"
 import { WalletBadge } from "../commons/WalletBadge"
 import { Publication } from "../../models/publication"
 import AddIcon from "@mui/icons-material/Add"
 import theme, { palette, typography } from "../../theme"
-import { useLocation, useNavigate } from "react-router-dom"
+import { useLocation, useNavigate, useParams } from "react-router-dom"
 import usePublication from "../../services/publications/hooks/usePublication"
 import { haveActionPermission } from "../../utils/permission"
 import { usePublicationContext } from "../../services/publications/contexts"
 import { UserOptions } from "../commons/UserOptions"
 import DeterministicAvatar from "../commons/DeterministicAvatar"
+import { useOnClickOutside } from "../../hooks/useOnClickOutside"
 
 type Props = {
   publication?: Publication
@@ -26,14 +27,21 @@ const ItemContainer = styled(Grid)({
   },
 })
 const PublicationHeader: React.FC<Props> = ({ publication, showCreatePost }) => {
+  const { publicationSlug } = useParams<{ publicationSlug: string }>()
   const { account, active } = useWeb3React()
   const navigate = useNavigate()
   const location = useLocation()
   const { setCurrentPath, saveDraftArticle, saveArticle } = usePublicationContext()
-  const { refetch, chainId: publicationChainId } = usePublication(publication?.id || "")
+  const { refetch, chainId: publicationChainId } = usePublication(publicationSlug || "")
   const [show, setShow] = useState<boolean>(false)
   const permissions = publication && publication.permissions
-  const { imageSrc } = usePublication(publication?.id || "")
+  const { imageSrc } = usePublication(publicationSlug || "")
+  const ref = useRef()
+  useOnClickOutside(ref, () => {
+    if (show) {
+      setShow(!show)
+    }
+  })
 
   useEffect(() => {
     if (location.pathname) {
@@ -47,7 +55,7 @@ const PublicationHeader: React.FC<Props> = ({ publication, showCreatePost }) => 
     refetch()
     saveDraftArticle(undefined)
     saveArticle(undefined)
-    navigate(`../${publication?.id}`)
+    navigate(`/${publicationSlug}`)
   }
 
   return (
@@ -107,7 +115,9 @@ const PublicationHeader: React.FC<Props> = ({ publication, showCreatePost }) => 
                   </Grid>
                   {show && (
                     <Grid item sx={{ position: "absolute", top: 45 }}>
-                      <UserOptions />
+                      <Box ref={ref}>
+                        <UserOptions />
+                      </Box>
                     </Grid>
                   )}
                 </Grid>
@@ -120,7 +130,7 @@ const PublicationHeader: React.FC<Props> = ({ publication, showCreatePost }) => 
                   variant="contained"
                   size={"large"}
                   onClick={() => {
-                    navigate(`../${publication?.id}/new-article/new`)
+                    navigate(`./new`)
                   }}
                 >
                   <AddIcon style={{ marginRight: 13 }} />

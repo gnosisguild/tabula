@@ -1,8 +1,7 @@
-import { Avatar, CircularProgress, Grid, styled, Typography } from "@mui/material"
+import { Avatar, Box, CircularProgress, Grid, Stack, Typography } from "@mui/material"
 import { useWeb3React } from "@web3-react/core"
 import React, { Fragment, useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import { chainNameToChainId } from "../../../constants/chain"
 import { usePublicationContext } from "../../../services/publications/contexts"
 import usePublication from "../../../services/publications/hooks/usePublication"
 import { palette, typography } from "../../../theme"
@@ -17,28 +16,23 @@ import PublicationTabs from "./components/PublicationTabs"
 import { SettingSection } from "./components/SettingSection"
 import { useDynamicFavIcon } from "../../../hooks/useDynamicFavIco"
 
-const PublicationContainer = styled(Grid)(({ theme }) => ({
-  [`${theme.breakpoints.down("md")}`]: {
-    justifyContent: "center",
-    marginTop: 20,
-  },
-
-  [`${theme.breakpoints.up("lg")}`]: {
-    justifyContent: "flex-start",
-    alignItems: "center",
-  },
-}))
-
 interface PublicationViewProps {
   updateChainId: (chainId: number) => void
 }
 
 export const PublicationView: React.FC<PublicationViewProps> = ({ updateChainId }) => {
-  const { publicationId, network } = useParams<{ publicationId: string; network: string }>()
+  const { publicationSlug } = useParams<{ publicationSlug: string }>()
   const { account } = useWeb3React()
   const { savePublication, editingPublication, saveDraftPublicationImage, setPublicationAvatar, publicationAvatar } =
     usePublicationContext()
-  const { data: publication, loading, executeQuery, imageSrc } = usePublication(publicationId || "")
+  const {
+    data: publication,
+    loading,
+    executeQuery,
+    imageSrc,
+    publicationId,
+    chainId,
+  } = usePublication(publicationSlug || "")
   const [currentTab, setCurrentTab] = useState<"articles" | "permissions" | "settings">("articles")
   const [imageGenerated, setImageGenerated] = useState<string>()
   useDynamicFavIcon(imageGenerated)
@@ -52,14 +46,16 @@ export const PublicationView: React.FC<PublicationViewProps> = ({ updateChainId 
     : false
 
   useEffect(() => {
-    updateChainId(chainNameToChainId(network))
-  }, [network, updateChainId])
+    if (chainId != null) {
+      updateChainId(chainId)
+    }
+  }, [chainId, updateChainId])
 
   useEffect(() => {
-    if (publicationId) {
+    if (publicationId != null) {
       executeQuery()
     }
-  }, [publicationId, executeQuery])
+  }, [publicationId, executeQuery, publicationSlug])
 
   useEffect(() => {
     if (publication) {
@@ -82,11 +78,18 @@ export const PublicationView: React.FC<PublicationViewProps> = ({ updateChainId 
         </Grid>
       )}
       {publication && (
-        <ViewContainer maxWidth="sm">
+        <ViewContainer maxWidth="md">
           <Grid container gap={11} flexDirection={"column"} mt={11}>
             <Grid item>
-              <PublicationContainer container gap={3} alignItems={"center"}>
-                <Grid item>
+              <Stack
+                gap={3}
+                direction={["column", "row"]}
+                sx={{
+                  alignItems: ["flex-start", "flex-start", "center"],
+                  justifyContent: ["center", "center", "flex-start"],
+                }}
+              >
+                <Box width={160}>
                   {!editingPublication && (
                     <Fragment>
                       {imageSrc ? (
@@ -108,25 +111,45 @@ export const PublicationView: React.FC<PublicationViewProps> = ({ updateChainId 
                       skipIPFSValidation
                     />
                   )}
-                </Grid>
-                <Grid item>
-                  <Grid container gap={2} flexDirection={"column"}>
+                </Box>
+                <Stack spacing={2}>
+                  <Stack spacing={1}>
                     <Typography
                       color={palette.grays[1000]}
                       variant="h5"
                       fontFamily={typography.fontFamilies.sans}
+                      lineHeight={1}
                       sx={{ margin: 0 }}
                     >
                       {publication.title}
                     </Typography>
-                    {publication.description && (
-                      <Typography color={palette.grays[1000]} sx={{ margin: 0 }}>
-                        {publication.description}
+
+                    <Stack
+                      direction="row"
+                      spacing={1}
+                      sx={{
+                        alignItems: "center",
+                        cursor: "pointer",
+                        "&:hover .copyIcon": { color: palette.grays[1000] },
+                      }}
+                    >
+                      <Typography
+                        color={palette.grays[600]}
+                        fontFamily={typography.fontFamilies.monospace}
+                        fontSize={10}
+                        sx={{ wordBreak: "break-all" }}
+                      >
+                        {publication.id}
                       </Typography>
-                    )}
-                  </Grid>
-                </Grid>
-              </PublicationContainer>
+                    </Stack>
+                  </Stack>
+                  {publication.description && (
+                    <Typography color={palette.grays[1000]} sx={{ margin: 0 }}>
+                      {publication.description}
+                    </Typography>
+                  )}
+                </Stack>
+              </Stack>
             </Grid>
             {havePermission && (
               <Grid item>
@@ -144,7 +167,9 @@ export const PublicationView: React.FC<PublicationViewProps> = ({ updateChainId 
             )}
             {!havePermission && (
               <Grid item>
-                <ArticleSection />
+                <PublicationTabs onChange={setCurrentTab} couldEdit={false} couldDelete={false} />
+                {currentTab === "articles" && <ArticleSection />}
+                {currentTab === "permissions" && <PermissionSection />}
               </Grid>
             )}
           </Grid>

@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from "react"
+import React from "react"
 import { Box } from "@mui/material"
 import PublicationHeader from "./PublicationHeader"
 import { Publication } from "../../models/publication"
@@ -6,17 +6,19 @@ import { Helmet } from "react-helmet"
 import { useDynamicFavIcon } from "../../hooks/useDynamicFavIco"
 import { usePublicationContext } from "../../services/publications/contexts"
 import usePublication from "../../services/publications/hooks/usePublication"
+import { useParams } from "react-router-dom"
 
 type Props = {
+  children: React.ReactNode
   publication?: Publication
   showCreatePost?: boolean
 }
 
-const PublicationPage: React.FC<PropsWithChildren<Props>> = ({ children, publication, showCreatePost }) => {
+const PublicationPage: React.FC<Props> = ({ children, publication, showCreatePost }) => {
   const { publicationAvatar } = usePublicationContext()
-  const { imageSrc } = usePublication(publication?.id || "")
+  const { publicationSlug } = useParams<{ publicationSlug: string }>()
+  const { imageSrc } = usePublication(publicationSlug || "")
   useDynamicFavIcon(imageSrc ? imageSrc : publicationAvatar)
-
   return (
     <>
       <Helmet>

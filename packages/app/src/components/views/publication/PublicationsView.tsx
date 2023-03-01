@@ -18,7 +18,6 @@ import usePublications from "../../../services/publications/hooks/usePublication
 import { CreatableSelect } from "../../commons/CreatableSelect"
 import { CreateSelectOption } from "../../../models/dropdown"
 import { usePosterContext } from "../../../services/poster/context"
-import { chainIdToChainName } from "../../../constants/chain"
 import { useDynamicFavIcon } from "../../../hooks/useDynamicFavIco"
 import { Helmet } from "react-helmet"
 import { useEffectOnce } from "../../../hooks/useEffectOnce"
@@ -102,15 +101,14 @@ export const PublicationsView: React.FC<PublicationsViewProps> = ({ updateChainI
   })
 
   useEffect(() => {
-    setLastPathWithChainName(undefined)
-  }, [setLastPathWithChainName])
+    if (chainId != null) {
+      updateChainId(chainId)
+    }
+  }, [chainId, updateChainId])
 
   useEffect(() => {
-    if (chainId != null) {
-      const chainName = chainIdToChainName(chainId)
-      navigate(`/${chainName}/publications`)
-    }
-  }, [chainId, updateChainId, navigate])
+    setLastPathWithChainName(undefined)
+  }, [setLastPathWithChainName])
 
   useEffectOnce(() => {
     if (!publications) {
@@ -206,7 +204,7 @@ export const PublicationsView: React.FC<PublicationsViewProps> = ({ updateChainI
                   <PublicationItem
                     publication={publication}
                     key={publication.id}
-                    onClick={() => navigate(`../${publication.id}`)}
+                    onClick={() => navigate(`/${publication.id}`)} // TODO: when we have reverse lookup (ens name set in the subgraph by somebody with permission) we can use that here
                   />
                 ))}
               </Grid>
