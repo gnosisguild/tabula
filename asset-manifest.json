@@ -1,0 +1,43 @@
+{
+  "files": {
+    "main.css": "/static/css/main.8b66cb9e.chunk.css",
+    "main.js": "/static/js/main.a1ad13ff.chunk.js",
+    "main.js.map": "/static/js/main.a1ad13ff.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.33f5b699.js",
+    "runtime-main.js.map": "/static/js/runtime-main.33f5b699.js.map",
+    "static/js/2.adaa29f1.chunk.js": "/static/js/2.adaa29f1.chunk.js",
+    "static/js/2.adaa29f1.chunk.js.map": "/static/js/2.adaa29f1.chunk.js.map",
+    "static/js/3.583c8c6e.chunk.js": "/static/js/3.583c8c6e.chunk.js",
+    "static/js/3.583c8c6e.chunk.js.map": "/static/js/3.583c8c6e.chunk.js.map",
+    "static/js/4.753208fc.chunk.js": "/static/js/4.753208fc.chunk.js",
+    "static/js/4.753208fc.chunk.js.map": "/static/js/4.753208fc.chunk.js.map",
+    "static/js/5.3d9f88a1.chunk.js": "/static/js/5.3d9f88a1.chunk.js",
+    "static/js/5.3d9f88a1.chunk.js.map": "/static/js/5.3d9f88a1.chunk.js.map",
+    "static/js/6.09daa9e5.chunk.js": "/static/js/6.09daa9e5.chunk.js",
+    "static/js/6.09daa9e5.chunk.js.map": "/static/js/6.09daa9e5.chunk.js.map",
+    "index.html": "/index.html",
+    "static/css/main.8b66cb9e.chunk.css.map": "/static/css/main.8b66cb9e.chunk.css.map",
+    "static/js/2.adaa29f1.chunk.js.LICENSE.txt": "/static/js/2.adaa29f1.chunk.js.LICENSE.txt",
+    "static/js/3.583c8c6e.chunk.js.LICENSE.txt": "/static/js/3.583c8c6e.chunk.js.LICENSE.txt",
+    "static/media/averta-bold.8fdcd8d4.woff2": "/static/media/averta-bold.8fdcd8d4.woff2",
+    "static/media/averta-normal.39d04879.woff2": "/static/media/averta-normal.39d04879.woff2",
+    "static/media/benefit-bg.2f8c2023.png": "/static/media/benefit-bg.2f8c2023.png",
+    "static/media/benefit1.8c48cfb4.png": "/static/media/benefit1.8c48cfb4.png",
+    "static/media/benefit2.cbdb427e.png": "/static/media/benefit2.cbdb427e.png",
+    "static/media/benefit3.058e624c.png": "/static/media/benefit3.058e624c.png",
+    "static/media/coinbaseIcon.51cef9e8.svg": "/static/media/coinbaseIcon.51cef9e8.svg",
+    "static/media/gnosis-logo.98081bc1.png": "/static/media/gnosis-logo.98081bc1.png",
+    "static/media/metamask.a4a8fe96.svg": "/static/media/metamask.a4a8fe96.svg",
+    "static/media/paper-texture-800-day.8ec81bbf.jpg": "/static/media/paper-texture-800-day.8ec81bbf.jpg",
+    "static/media/paper-texture-800-night.f40c901e.jpg": "/static/media/paper-texture-800-night.f40c901e.jpg",
+    "static/media/tablet-hero-graphic.4e6eebcb.png": "/static/media/tablet-hero-graphic.4e6eebcb.png",
+    "static/media/tabula-logo-wordmark.75f17688.svg": "/static/media/tabula-logo-wordmark.75f17688.svg",
+    "static/media/walletConnect.6658c9d1.svg": "/static/media/walletConnect.6658c9d1.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.33f5b699.js",
+    "static/js/2.adaa29f1.chunk.js",
+    "static/css/main.8b66cb9e.chunk.css",
+    "static/js/main.a1ad13ff.chunk.js"
+  ]
+}
