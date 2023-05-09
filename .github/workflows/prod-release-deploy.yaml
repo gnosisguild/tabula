@@ -115,7 +115,7 @@ jobs:
       - name: Deploy subgraph to Sepolia
         working-directory: packages/subgraph
         env:
-          HOSTED_SERVICE_SUBGRAPH__GOERLI: auryn-macmillan/tabula-sepolia
+          HOSTED_SERVICE_SUBGRAPH__SEPOLIA: auryn-macmillan/tabula-sepolia
         run: yarn deploy:sepolia
 
       - name: Deploy subgraph to Polygon

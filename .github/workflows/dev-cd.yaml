@@ -83,5 +83,5 @@ jobs:
       - name: Deploy Sepolia subgraphs
         working-directory: packages/subgraph
         env:
-          HOSTED_SERVICE_SUBGRAPH__GOERLI: auryn-macmillan/tabula-sepolia
+          HOSTED_SERVICE_SUBGRAPH__SEPOLIA: auryn-macmillan/tabula-sepolia
         run: yarn deploy:sepolia
