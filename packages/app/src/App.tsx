@@ -19,19 +19,32 @@ import { PosterProvider } from "./services/poster/context"
 import { WalletProvider } from "./connectors/WalletProvider"
 import { RedirectOldRoute } from "./components/commons/RedicrectOldRoute"
 import PreviewArticleView from "./components/views/publication/PreviewArticleView"
+import axios from "axios"
 
 const App: React.FC = () => {
   // the chainId should be from the publication if its present
-
+  const serverURL = window.location.href
   const { chainId: initialChainIdFromProvider } = useWeb3React() // chain id from connected wallet
   const [chainId, setChainId] = useState(initialChainIdFromProvider)
   const [currentSubgraphClient, setCurrentSubgraphClient] = useState(subgraphClient(chainId))
 
+  console.log("serverURL", serverURL)
   const updateChainId = (newChainId: number | undefined) => {
     if (newChainId !== chainId) {
       setChainId(newChainId)
     }
   }
+
+  useEffect(() => {
+    if (serverURL) {
+      const cloudflare = axios.get("https://cloudflare-dns.com/dns-query?name=example.com&type=TXT", {
+        headers: {
+          accept: "application/dns-json",
+        },
+      })
+      console.log("cloudflare", cloudflare)
+    }
+  }, [serverURL])
 
   useEffect(() => {
     setCurrentSubgraphClient(subgraphClient(chainId))
