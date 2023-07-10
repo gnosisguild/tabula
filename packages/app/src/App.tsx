@@ -37,12 +37,15 @@ const App: React.FC = () => {
 
   useEffect(() => {
     if (serverURL) {
-      const cloudflare = axios.get("https://cloudflare-dns.com/dns-query?name=example.com&type=TXT", {
-        headers: {
-          accept: "application/dns-json",
-        },
-      })
-      console.log("cloudflare", cloudflare)
+      const fetch = async () => {
+        const cloudflare = await axios.get("https://cloudflare-dns.com/dns-query?name=example.com&type=TXT", {
+          headers: {
+            accept: "application/dns-json",
+          },
+        })
+        console.log("cloudflare", cloudflare)
+      }
+      fetch()
     }
   }, [serverURL])
 
