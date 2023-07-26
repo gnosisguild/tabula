@@ -4,6 +4,7 @@ import { palette, typography } from "../../theme"
 import WarningAmberIcon from "@mui/icons-material/WarningAmber"
 import { useLocation, useNavigate } from "react-router-dom"
 import { usePublicationContext } from "../../services/publications/contexts"
+import useLocalStorage from "../../hooks/useLocalStorage"
 
 const PinningAlertContainer = styled(Box)({
   background: palette.secondary[200],
@@ -26,7 +27,9 @@ export const PinningAlert: React.FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const { setCurrentPath } = usePublicationContext()
-  return (
+  const [pinningRisk] = useLocalStorage<boolean | undefined>("pinningRisk", undefined)
+
+  return pinningRisk ? (
     <PinningAlertContainer>
       <Grid container gap={2} flexDirection="column">
         <Grid item sx={{ display: "flex", alignItems: "center" }}>
@@ -65,5 +68,5 @@ export const PinningAlert: React.FC = () => {
         </Grid>
       </Grid>
     </PinningAlertContainer>
-  )
+  ) : null
 }

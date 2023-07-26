@@ -9,7 +9,6 @@ import { SUPPORTED_WALLETS } from "../../../constants/wallet"
 import { AbstractConnector } from "@web3-react/abstract-connector"
 import { usePublicationContext } from "../../../services/publications/contexts"
 import useLocalStorage from "../../../hooks/useLocalStorage"
-import { Pinning } from "../../../models/pinning"
 import { ViewContainer } from "../../commons/ViewContainer"
 import { ALL_SUPPORTED_CHAIN_IDS, chainIdToChainName, chainToString, switchChain } from "../../../constants/chain"
 import WarningAmberIcon from "@mui/icons-material/WarningAmber"
@@ -39,8 +38,8 @@ const ModalContentContainer = styled(Box)({
 })
 export const WalletView: React.FC = () => {
   const navigate = useNavigate()
+
   const { currentPath } = usePublicationContext()
-  const [pinning] = useLocalStorage<Pinning | undefined>("pinning", undefined)
   const [walletAutoConnect, setWalletAutoConnect] = useLocalStorage<boolean | undefined>("walletAutoConnect", undefined)
   const { activate, active } = useWeb3React()
   const search = useLocation().search
@@ -55,13 +54,7 @@ export const WalletView: React.FC = () => {
     if (active) {
       const doNavigation = async () => {
         if (connector != null) {
-          if (currentPath && !pinning) {
-            navigate(`/pinning`)
-          }
-          if (!currentPath && !pinning) {
-            navigate(`/pinning`)
-          }
-          if (!currentPath && pinning) {
+          if (!currentPath) {
             navigate(`/publications`)
           }
         }
@@ -72,7 +65,7 @@ export const WalletView: React.FC = () => {
         doNavigation()
       }
     }
-  }, [active, currentPath, navigate, pinning, connector])
+  }, [active, currentPath, navigate, connector])
 
   const handleConnector = async (connector: AbstractConnector) => {
     setConnector(connector)

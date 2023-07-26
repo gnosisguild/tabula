@@ -22,6 +22,7 @@ import usePublications from "../../../../services/publications/hooks/usePublicat
 import { useNavigate, useParams } from "react-router-dom"
 import { CreatableSelect } from "../../../commons/CreatableSelect"
 import { CreateSelectOption } from "../../../../models/dropdown"
+import { PinningAlert } from "../../../commons/PinningAlert"
 
 type Post = {
   title: string
@@ -173,6 +174,9 @@ export const SettingSection: React.FC<SettingsSectionProps> = ({ couldDelete, co
   return (
     <Container maxWidth="sm">
       <Box mt={4}>
+        <Grid mb={4}>
+          <PinningAlert />
+        </Grid>
         <form onSubmit={handleSubmit((data) => onSubmitHandler(data as Post))}>
           <Grid container gap={4} flexDirection="column">
             <Grid item>

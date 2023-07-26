@@ -63,6 +63,7 @@ const SetupIpfsView: React.FC = () => {
   const { isValidIpfsService } = useIpfs()
   const { currentPath, setCurrentPath } = usePublicationContext()
   const [pinning, setPinning] = useLocalStorage<Pinning | undefined>("pinning", undefined)
+  const [, setPinningRisk] = useLocalStorage<boolean | undefined>("pinningRisk", undefined)
   const {
     control,
     handleSubmit,
@@ -96,6 +97,7 @@ const SetupIpfsView: React.FC = () => {
       return
     }
     setPinning(data)
+    setPinningRisk(false)
     openNotification({
       message: "Successfully set up the pinning service!",
       variant: "success",
@@ -300,6 +302,7 @@ const SetupIpfsView: React.FC = () => {
             <Grid item>
               <StyledLinkButton
                 onClick={() => {
+                  setPinningRisk(true)
                   setPinning(undefined)
                   handleClose()
                 }}

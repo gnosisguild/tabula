@@ -20,6 +20,8 @@ import { CreateSelectOption } from "../../../models/dropdown"
 import { usePosterContext } from "../../../services/poster/context"
 import { useDynamicFavIcon } from "../../../hooks/useDynamicFavIco"
 import { usePublicationContext } from "../../../services/publications/contexts"
+import usePinning from "../../../hooks/usePinning"
+import { PinningAlert } from "../../commons/PinningAlert"
 
 const PublicationsAvatarContainer = styled(Grid)(({ theme }) => ({
   display: "flex",
@@ -76,6 +78,7 @@ export const PublicationsView: React.FC<PublicationsViewProps> = ({ updateChainI
   const { account, chainId } = useWeb3React()
   const { executePublication } = usePoster()
   const { setLastPathWithChainName } = usePosterContext()
+  const { checkPinningSetup } = usePinning()
   useDynamicFavIcon(undefined)
   const [loading, setLoading] = useState<boolean>(false)
   const {
@@ -134,8 +137,12 @@ export const PublicationsView: React.FC<PublicationsViewProps> = ({ updateChainI
   }, [lastPublicationId, navigate, redirect])
 
   const onSubmitHandler = (data: Post) => {
-    setLastPublicationTitle(data.title)
-    handlePublication(data)
+    const isSetup = checkPinningSetup()
+    if (isSetup) {
+      setLastPublicationTitle(data.title)
+      handlePublication(data)
+    }
+    return
   }
 
   const handlePublicationsToShow = (publications: Publication[], address: string) => {
@@ -208,6 +215,9 @@ export const PublicationsView: React.FC<PublicationsViewProps> = ({ updateChainI
               </Grid>
             </Grid>
           )}
+          <Grid mt={2}>
+            <PinningAlert />
+          </Grid>
           <Grid>
             <Typography color={palette.grays[1000]} variant="h5" fontFamily={typography.fontFamilies.sans}>
               Create a publication
