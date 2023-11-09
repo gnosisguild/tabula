@@ -30,7 +30,7 @@ const RichTextButton = styled(Box)({
 
 const RichTextContainer = styled(Box)({
   position: "absolute",
-  maxWidth: 140,
+  width: 140,
   background: palette.whites[1000],
   borderRadius: 8,
   boxShadow: "0px 4px 16px rgba(0, 0, 0, 0.05)",
