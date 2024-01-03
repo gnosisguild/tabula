@@ -1,5 +1,5 @@
 import React from "react"
-import ReactDOM from "react-dom"
+import { createRoot } from "react-dom/client"
 import App from "./App"
 import { HashRouter } from "react-router-dom"
 import "./index.css"
@@ -9,8 +9,12 @@ import { day } from "./theme/day"
 import { Web3ReactProvider } from "@web3-react/core"
 import { getLibrary } from "./config"
 import { Helmet } from "react-helmet"
+import { IPFSProvider } from "./services/ipfs/context"
 
-ReactDOM.render(
+const container = document.getElementById("root") as Element | DocumentFragment
+const root = createRoot(container)
+
+root.render(
   <React.StrictMode>
     <Helmet>
       <meta property="og:title" content="Tabula" />
@@ -26,11 +30,12 @@ ReactDOM.render(
     <Web3ReactProvider getLibrary={getLibrary}>
       <HashRouter>
         <ThemeProvider theme={day}>
-          <CssBaseline />
-          <App />
+          <IPFSProvider>
+            <CssBaseline />
+            <App />
+          </IPFSProvider>
         </ThemeProvider>
       </HashRouter>
     </Web3ReactProvider>
   </React.StrictMode>,
-  document.getElementById("root"),
 )
